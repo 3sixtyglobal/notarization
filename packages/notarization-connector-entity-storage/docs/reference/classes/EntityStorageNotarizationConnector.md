@@ -1,0 +1,221 @@
+# Class: EntityStorageNotarizationConnector
+
+Entity storage connector for notarization scaffolding.
+
+## Implements
+
+- `INotarizationConnector`
+
+## Constructors
+
+### Constructor
+
+> **new EntityStorageNotarizationConnector**(`options?`): `EntityStorageNotarizationConnector`
+
+Create a new instance of EntityStorageNotarizationConnector.
+
+#### Parameters
+
+##### options?
+
+[`IEntityStorageNotarizationConnectorConstructorOptions`](../interfaces/IEntityStorageNotarizationConnectorConstructorOptions.md)
+
+The options for the connector.
+
+#### Returns
+
+`EntityStorageNotarizationConnector`
+
+## Properties
+
+### NAMESPACE {#namespace}
+
+> `readonly` `static` **NAMESPACE**: `string` = `"entity-storage"`
+
+The namespace supported by the connector.
+
+***
+
+### CLASS\_NAME {#class_name}
+
+> `readonly` `static` **CLASS\_NAME**: `string`
+
+Runtime name for the class.
+
+## Methods
+
+### className() {#classname}
+
+> **className**(): `string`
+
+Returns the class name of the component.
+
+#### Returns
+
+`string`
+
+The class name of the component.
+
+#### Implementation of
+
+`INotarizationConnector.className`
+
+***
+
+### create() {#create}
+
+> **create**(`controllerIdentity`, `notarization`): `Promise`\<`string`\>
+
+Create a new notarization.
+
+#### Parameters
+
+##### controllerIdentity
+
+`string`
+
+The identity to perform the notarization operation with.
+
+##### notarization
+
+`Omit`\<`INotarization`, `"id"` \| `"dateCreated"`\>
+
+The notarization data without generated fields.
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The generated notarization id.
+
+#### Implementation of
+
+`INotarizationConnector.create`
+
+***
+
+### get() {#get}
+
+> **get**(`id`): `Promise`\<`INotarization`\>
+
+Get an existing notarization.
+
+#### Parameters
+
+##### id
+
+`string`
+
+The id of the notarization to get.
+
+#### Returns
+
+`Promise`\<`INotarization`\>
+
+The notarization.
+
+#### Implementation of
+
+`INotarizationConnector.get`
+
+***
+
+### remove() {#remove}
+
+> **remove**(`controllerIdentity`, `id`): `Promise`\<`void`\>
+
+Remove an existing notarization.
+
+#### Parameters
+
+##### controllerIdentity
+
+`string`
+
+The identity to perform the notarization operation with.
+
+##### id
+
+`string`
+
+The id of the notarization to remove.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`INotarizationConnector.remove`
+
+***
+
+### update() {#update}
+
+> **update**(`controllerIdentity`, `notarization`): `Promise`\<`void`\>
+
+Update an existing notarization.
+
+#### Parameters
+
+##### controllerIdentity
+
+`string`
+
+The identity to perform the notarization operation with.
+
+##### notarization
+
+`INotarization`
+
+The notarization to update.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`INotarizationConnector.update`
+
+***
+
+### transfer() {#transfer}
+
+> **transfer**(`controllerIdentity`, `id`, `recipientAddress`): `Promise`\<`void`\>
+
+Transfer an existing notarization.
+
+#### Parameters
+
+##### controllerIdentity
+
+`string`
+
+The identity to perform the notarization operation with.
+
+##### id
+
+`string`
+
+The id of the notarization to transfer.
+
+##### recipientAddress
+
+`string`
+
+The recipient address.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Nothing.
+
+#### Implementation of
+
+`INotarizationConnector.transfer`

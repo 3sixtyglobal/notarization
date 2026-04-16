@@ -1,0 +1,23 @@
+{
+	"error": {
+		"entityStorageNotarizationConnector": {
+			"creationFailed": "Creating the notarization failed",
+			"getFailed": "Getting the notarization failed",
+			"removeFailed": "Removing the notarization failed",
+			"updateFailed": "Updating the notarization failed",
+			"transferFailed": "Transferring the notarization failed",
+			"namespaceMismatch": "The notarization id namespace is invalid for this connector",
+			"notarizationNotFound": "The requested notarization could not be found",
+			"notControllerRemove": "Only the controller can remove this notarization",
+			"notControllerUpdate": "Only the controller can update this notarization",
+			"deleteLockActive": "The notarization cannot be removed until the delete lock expires",
+			"updateLockActive": "The notarization is locked and cannot be updated",
+			"transferLockActive": "The notarization is locked and cannot be transferred",
+			"immutableFieldModification": "Cannot modify immutable notarization field",
+			"lockedNotarizationDeleteLockMustHaveDate": "Locked notarization delete locks must specify an UnlockAt date",
+			"lockedNotarizationCannotHaveTransferLock": "Locked notarizations are non-transferable and cannot have a transfer lock",
+			"dynamicNotarizationCannotHaveDeleteLock": "Dynamic notarizations cannot have a delete lock",
+			"dynamicNotarizationTransferLockMustHaveDate": "Dynamic notarization transfer locks must specify a valid UnlockAt date"
+		}
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"info": {
+		"iotaNotarizationConnector": {}
+	},
+	"error": {
+		"iotaNotarizationConnector": {
+			"creationFailed": "Failed to create the notarization.",
+			"creationFailedOutput": "Failed to parse the created notarization from transaction output.",
+			"deleteLockActive": "Deletion is currently locked for this notarization.",
+			"getFailed": "Failed to get the notarization.",
+			"invalidDate": "The value \"{{value}}\" is not a valid ISO date-time.",
+			"namespaceMismatch": "The notarization id \"{{id}}\" is not in the expected namespace \"{{namespace}}\".",
+			"removeFailed": "Failed to remove the notarization.",
+			"transferFailed": "Failed to transfer the notarization.",
+			"transferLockActive": "Transfer is currently locked for this notarization.",
+			"updateFailed": "Failed to update the notarization.",
+			"updateLockActive": "Updates are currently locked for this notarization."
+		}
+	}
+}

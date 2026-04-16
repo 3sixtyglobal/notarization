@@ -1,0 +1,13 @@
+{
+	"error": {
+		"notarizationService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the notarization service \"{namespace}\"",
+			"noConnectors": "There are no connectors registered with the notarization factory",
+			"createFailed": "The creation of the notarization failed",
+			"getFailed": "The retrieval of the notarization failed",
+			"removeFailed": "The removal of the notarization failed",
+			"updateFailed": "The update of the notarization failed",
+			"transferFailed": "The transfer of the notarization failed"
+		}
+	}
+}
