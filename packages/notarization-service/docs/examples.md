@@ -112,7 +112,7 @@ await service.update(
 
 await service.transfer(
   'notarization:urn:notarization:demo:1',
-  'did:example:recipient',
+  '0x1234567890abcdef1234567890abcdef12345678',
   'did:example:controller'
 );
 

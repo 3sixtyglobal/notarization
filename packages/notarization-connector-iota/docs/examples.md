@@ -38,7 +38,7 @@ await connector.update('did:example:owner', {
   data: new Uint8Array([4, 5, 6])
 });
 
-await connector.transfer('did:example:owner', id, 'did:example:recipient');
+await connector.transfer('did:example:owner', id, '0x1234567890abcdef1234567890abcdef12345678');
 await connector.remove('did:example:recipient', id);
 ```
 
