@@ -11,13 +11,14 @@ import {
 	type OnChainNotarization
 } from "@iota/notarization/node/index.js";
 import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@twin.org/core";
-import { Iota } from "@twin.org/dlt-iota";
+import { type IIotaTransactionBlockResponse, Iota } from "@twin.org/dlt-iota";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { INotarization, INotarizationConnector } from "@twin.org/notarization-models";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
+import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizationConnectorConfig.js";
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
 
 /**
@@ -38,7 +39,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * The connector configuration.
 	 * @internal
 	 */
-	private readonly _config: IIotaNotarizationConnectorConstructorOptions["config"];
+	private readonly _config: IIotaNotarizationConnectorConfig;
 
 	/**
 	 * The vault connector.
@@ -371,7 +372,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			build: (client: NotarizationClient) => Promise<[Uint8Array, string[], unknown]>;
 		},
 		notarizationClient: NotarizationClient
-	): Promise<{ objectChanges?: unknown }> {
+	): Promise<IIotaTransactionBlockResponse> {
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
 		const transaction = Transaction.from(txBytes);
 		const owner = await this.getControllerAddress(controllerIdentity);
@@ -387,9 +388,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			transaction
 		);
 
-		return {
-			objectChanges: response.objectChanges
-		};
+		return response;
 	}
 
 	/**
