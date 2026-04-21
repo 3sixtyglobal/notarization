@@ -116,7 +116,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 				const result = await this.postTransaction(
 					controllerIdentity,
 					tx.finish(),
-					notarizationClient
+					notarizationClient,
+					"create"
 				);
 				return this.toNotarizationId(this.extractCreatedObjectId(result));
 			}
@@ -142,11 +143,13 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			const result = await this.postTransaction(
 				controllerIdentity,
 				tx.finish(),
-				notarizationClient
+				notarizationClient,
+				"create"
 			);
 
 			return this.toNotarizationId(this.extractCreatedObjectId(result));
 		} catch (error) {
+			console.log(error);
 			throw new GeneralError(
 				IotaNotarizationConnector.CLASS_NAME,
 				"creationFailed",
@@ -203,7 +206,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			await this.postTransaction(
 				controllerIdentity,
 				notarizationClient.destroy(objectId),
-				notarizationClient
+				notarizationClient,
+				"remove"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -247,7 +251,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 					State.fromBytes(notarization.data, notarization.description),
 					objectId
 				),
-				notarizationClient
+				notarizationClient,
+				"update"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -297,7 +302,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			await this.postTransaction(
 				controllerIdentity,
 				notarizationClient.transferNotarization(objectId, recipientAddress),
-				notarizationClient
+				notarizationClient,
+				"transfer"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -363,6 +369,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @param controllerIdentity The identity performing the transaction.
 	 * @param transactionBuilder The transaction builder.
 	 * @param notarizationClient The notarization client.
+	 * @param dryRunLabel An optional label for dry run transactions when cost logging is enabled.
 	 * @returns The execution result.
 	 * @internal
 	 */
@@ -371,7 +378,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		transactionBuilder: {
 			build: (client: NotarizationClient) => Promise<[Uint8Array, string[], unknown]>;
 		},
-		notarizationClient: NotarizationClient
+		notarizationClient: NotarizationClient,
+		dryRunLabel: string
 	): Promise<IIotaTransactionBlockResponse> {
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
 		const transaction = Transaction.from(txBytes);
@@ -385,8 +393,13 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			controllerIdentity,
 			iotaClient,
 			owner,
-			transaction
+			transaction,
+			{
+				dryRunLabel: this._config.enableCostLogging ? dryRunLabel : undefined
+			}
 		);
+
+		this.handleAbortCode(response);
 
 		return response;
 	}
@@ -561,5 +574,49 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			immutableDescription: onChainNotarization.immutableMetadata.description,
 			...locks
 		};
+	}
+
+	/**
+	 * Handles an abort code from a transaction result if the transaction was aborted.
+	 * @param response The transaction result to handle the abort code from.
+	 * @internal
+	 */
+	private handleAbortCode(response: IIotaTransactionBlockResponse): void {
+		if (
+			response.effects?.status?.status === "failure" &&
+			Is.stringValue(response.effects.status.error)
+		) {
+			const match = /abort code: (\d+)/.exec(response.effects.status.error);
+			if (match) {
+				const abortCode = match[1];
+
+				if (abortCode === "0") {
+					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "updateWhileLocked");
+				} else if (abortCode === "1") {
+					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "destroyWhileLocked");
+				} else if (abortCode === "2") {
+					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "lockTimeNotSatisfied");
+				} else if (abortCode === "3") {
+					throw new GeneralError(
+						IotaNotarizationConnector.CLASS_NAME,
+						"untilDestroyedLockNotAllowed"
+					);
+				} else if (abortCode === "4") {
+					throw new GeneralError(
+						IotaNotarizationConnector.CLASS_NAME,
+						"dynamicNotarizationInvariants"
+					);
+				} else if (abortCode === "5") {
+					throw new GeneralError(
+						IotaNotarizationConnector.CLASS_NAME,
+						"lockedNotarizationInvariants"
+					);
+				} else {
+					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "unknownAbortCode", {
+						abortCode
+					});
+				}
+			}
+		}
 	}
 }
