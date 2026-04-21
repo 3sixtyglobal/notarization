@@ -149,7 +149,6 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 			return this.toNotarizationId(this.extractCreatedObjectId(result));
 		} catch (error) {
-			console.log(error);
 			throw new GeneralError(
 				IotaNotarizationConnector.CLASS_NAME,
 				"creationFailed",

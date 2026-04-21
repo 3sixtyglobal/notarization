@@ -42,7 +42,7 @@ describe("IotaNotarizationConnector with Gas Station Sponsorship", () => {
 				},
 				vaultMnemonicId: TEST_MNEMONIC_NAME,
 				network: TEST_NETWORK,
-				enableCostLogging: true
+				enableCostLogging: false
 			}
 		});
 	});
