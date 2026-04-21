@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/notarization/compare/notarization-connector-entity-storage-v0.0.3-next.2...notarization-connector-entity-storage-v0.0.3-next.3) (2026-04-21)
+
+
+### Miscellaneous Chores
+
+* **notarization-connector-entity-storage:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/notarization/compare/notarization-connector-entity-storage-v0.0.3-next.1...notarization-connector-entity-storage-v0.0.3-next.2) (2026-04-21)
 
 

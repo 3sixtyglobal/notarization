@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.3](https://github.com/twinfoundation/notarization/compare/notarization-connector-iota-v0.0.3-next.2...notarization-connector-iota-v0.0.3-next.3) (2026-04-21)
+
+
+### Features
+
+* improve error handling ([73c6eb5](https://github.com/twinfoundation/notarization/commit/73c6eb562c529422a709de60e15da7d4c283a33b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.2 to 0.0.3-next.3
+
 ## [0.0.3-next.2](https://github.com/twinfoundation/notarization/compare/notarization-connector-iota-v0.0.3-next.1...notarization-connector-iota-v0.0.3-next.2) (2026-04-21)
 
 
