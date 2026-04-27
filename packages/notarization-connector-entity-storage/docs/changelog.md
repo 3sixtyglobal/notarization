@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.3-next.3](https://github.com/twinfoundation/notarization/compare/notarization-connector-entity-storage-v0.0.3-next.2...notarization-connector-entity-storage-v0.0.3-next.3) (2026-04-21)
+## [0.0.3-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.2...notarization-connector-entity-storage-v0.0.3-next.3) (2026-04-21)
 
 
 ### Miscellaneous Chores
@@ -14,12 +14,12 @@
   * dependencies
     * @twin.org/notarization-models bumped from 0.0.3-next.2 to 0.0.3-next.3
 
-## [0.0.3-next.2](https://github.com/twinfoundation/notarization/compare/notarization-connector-entity-storage-v0.0.3-next.1...notarization-connector-entity-storage-v0.0.3-next.2) (2026-04-21)
+## [0.0.3-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.1...notarization-connector-entity-storage-v0.0.3-next.2) (2026-04-21)
 
 
 ### Bug Fixes
 
-* dependencies ([901a294](https://github.com/twinfoundation/notarization/commit/901a294c4189ec75d4d2dd3f45879d266668f79a))
+* dependencies ([901a294](https://github.com/iotaledger/twin-notarization/commit/901a294c4189ec75d4d2dd3f45879d266668f79a))
 
 
 ### Dependencies
@@ -28,12 +28,12 @@
   * dependencies
     * @twin.org/notarization-models bumped from 0.0.3-next.1 to 0.0.3-next.2
 
-## [0.0.3-next.1](https://github.com/twinfoundation/notarization/compare/notarization-connector-entity-storage-v0.0.3-next.0...notarization-connector-entity-storage-v0.0.3-next.1) (2026-04-16)
+## [0.0.3-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.0...notarization-connector-entity-storage-v0.0.3-next.1) (2026-04-16)
 
 
 ### Features
 
-* initial commit ([2271741](https://github.com/twinfoundation/notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
 
 
 ### Dependencies
