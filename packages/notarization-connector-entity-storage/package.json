@@ -4,7 +4,7 @@
 	"description": "Entity storage notarization connector for local persistence and test-oriented workflows.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/twinfoundation/notarization.git",
+		"url": "git+https://github.com/iotaledger/notarization.git",
 		"directory": "packages/notarization-connector-entity-storage"
 	},
 	"author": "martyn.janes@iota.org",
@@ -86,7 +86,7 @@
 		"integration"
 	],
 	"bugs": {
-		"url": "git+https://github.com/twinfoundation/notarization/issues"
+		"url": "git+https://github.com/iotaledger/notarization/issues"
 	},
 	"homepage": "https://twindev.org"
 }
