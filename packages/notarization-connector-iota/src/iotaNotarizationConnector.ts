@@ -17,7 +17,6 @@ import { nameof } from "@twin.org/nameof";
 import type { INotarization, INotarizationConnector } from "@twin.org/notarization-models";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
-import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
 import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizationConnectorConfig.js";
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
 
@@ -48,12 +47,6 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
-	 * The wallet connector.
-	 * @internal
-	 */
-	private readonly _walletConnector: IWalletConnector;
-
-	/**
 	 * The logging component.
 	 * @internal
 	 */
@@ -69,7 +62,6 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		this._config = options.config;
 		Iota.populateConfig(this._config);
 		this._vaultConnector = VaultConnectorFactory.get(options.vaultConnectorType ?? "vault");
-		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
 		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
 	}
 
@@ -334,13 +326,11 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 */
 	private async buildWritableClient(controllerIdentity: string): Promise<NotarizationClient> {
 		const readOnlyClient = await this.buildReadOnlyClient();
-		const address = await this.getControllerAddress(controllerIdentity);
-
-		const seed = await Iota.getSeed(this._config, this._vaultConnector, controllerIdentity);
-		const keyPair = Iota.getKeyPair(
-			seed,
-			this._config.coinType ?? Iota.DEFAULT_COIN_TYPE,
-			0,
+		const keyPair = await Iota.getKeyPair(
+			this._vaultConnector,
+			this._config,
+			controllerIdentity,
+			this._config.accountAddressIndex ?? 0,
 			this._config.walletAddressIndex ?? 0
 		);
 		const signerKeyPair = new Ed25519Keypair({
@@ -353,7 +343,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 				(await signerKeyPair.signTransaction(txDataBcs)).signature,
 			publicKey: async () => signerKeyPair.getPublicKey(),
 			iotaPublicKeyBytes: async () => signerKeyPair.getPublicKey().toIotaBytes(),
-			keyId: () => address
+			keyId: () => Iota.publicKeyToAddress(keyPair.publicKey)
 		};
 
 		return NotarizationClient.create(readOnlyClient, signer);
@@ -382,7 +372,13 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	): Promise<IIotaTransactionBlockResponse> {
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
 		const transaction = Transaction.from(txBytes);
-		const owner = await this.getControllerAddress(controllerIdentity);
+		const owner = await Iota.getAddress(
+			this._vaultConnector,
+			this._config,
+			controllerIdentity,
+			this._config.accountAddressIndex ?? 0,
+			this._config.walletAddressIndex ?? 0
+		);
 		const iotaClient = Iota.createClient(this._config);
 
 		const response = await Iota.prepareAndPostTransaction(
@@ -426,23 +422,6 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		}
 
 		return createdObject.objectId;
-	}
-
-	/**
-	 * Get the address for the controller identity.
-	 * @param controllerIdentity The identity.
-	 * @returns The configured address.
-	 * @internal
-	 */
-	private async getControllerAddress(controllerIdentity: string): Promise<string> {
-		const addresses = await this._walletConnector.getAddresses(
-			controllerIdentity,
-			0,
-			this._config.walletAddressIndex ?? 0,
-			1
-		);
-
-		return addresses[0];
 	}
 
 	/**
@@ -581,40 +560,33 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @internal
 	 */
 	private handleAbortCode(response: IIotaTransactionBlockResponse): void {
-		if (
-			response.effects?.status?.status === "failure" &&
-			Is.stringValue(response.effects.status.error)
-		) {
-			const match = /abort code: (\d+)/.exec(response.effects.status.error);
-			if (match) {
-				const abortCode = match[1];
-
-				if (abortCode === "0") {
-					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "updateWhileLocked");
-				} else if (abortCode === "1") {
-					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "destroyWhileLocked");
-				} else if (abortCode === "2") {
-					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "lockTimeNotSatisfied");
-				} else if (abortCode === "3") {
-					throw new GeneralError(
-						IotaNotarizationConnector.CLASS_NAME,
-						"untilDestroyedLockNotAllowed"
-					);
-				} else if (abortCode === "4") {
-					throw new GeneralError(
-						IotaNotarizationConnector.CLASS_NAME,
-						"dynamicNotarizationInvariants"
-					);
-				} else if (abortCode === "5") {
-					throw new GeneralError(
-						IotaNotarizationConnector.CLASS_NAME,
-						"lockedNotarizationInvariants"
-					);
-				} else {
-					throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "unknownAbortCode", {
-						abortCode
-					});
-				}
+		const abortCode = Iota.extractAbortCode(response);
+		if (!Is.empty(abortCode)) {
+			if (abortCode === 0) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "updateWhileLocked");
+			} else if (abortCode === 1) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "destroyWhileLocked");
+			} else if (abortCode === 2) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "lockTimeNotSatisfied");
+			} else if (abortCode === 3) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"untilDestroyedLockNotAllowed"
+				);
+			} else if (abortCode === 4) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"dynamicNotarizationInvariants"
+				);
+			} else if (abortCode === 5) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"lockedNotarizationInvariants"
+				);
+			} else {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "unknownAbortCode", {
+					abortCode
+				});
 			}
 		}
 	}

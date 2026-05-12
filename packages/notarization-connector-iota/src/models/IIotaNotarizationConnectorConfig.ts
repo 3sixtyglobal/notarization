@@ -7,6 +7,12 @@ import type { IIotaConfig } from "@twin.org/dlt-iota";
  */
 export interface IIotaNotarizationConnectorConfig extends IIotaConfig {
 	/**
+	 * The account address index to use when performing notarization operations.
+	 * @default 0
+	 */
+	accountAddressIndex?: number;
+
+	/**
 	 * The wallet address index to use when performing notarization operations.
 	 * @default 0
 	 */
