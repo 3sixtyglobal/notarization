@@ -8,8 +8,8 @@ import { EntityStorageNotarizationConnector } from "../src/entityStorageNotariza
 const TEST_DATA = Converter.utf8ToBytes("notarization-test-data");
 
 describe("EntityStorageNotarizationConnector", () => {
-	beforeEach(() => {
-		notarizationStore.getStore().length = 0;
+	beforeEach(async () => {
+		await notarizationStore.empty();
 	});
 
 	test("Can create the service", async () => {
