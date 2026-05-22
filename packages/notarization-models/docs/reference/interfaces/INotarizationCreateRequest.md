@@ -6,11 +6,17 @@ Request to create a notarization.
 
 ### body {#body}
 
-> **body**: `Omit`\<[`INotarization`](INotarization.md), `"id"` \| `"dateCreated"`\> & `object`
+> **body**: `Omit`\<[`INotarization`](INotarization.md), `"id"` \| `"dateCreated"` \| `"data"`\> & `object`
 
 The request data.
 
 #### Type Declaration
+
+##### data
+
+> **data**: `string`
+
+The notarization data as a base64 encoded string.
 
 ##### namespace?
 
