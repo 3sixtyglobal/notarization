@@ -1,5 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { Converter } from "@twin.org/core";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import { HeaderTypes } from "@twin.org/web";
 import { NotarizationRestClient } from "../src/notarizationRestClient.js";
@@ -71,7 +72,7 @@ describe("NotarizationRestClient", () => {
 			id: "notarization:default:abc123",
 			mode: NotarizationMode.Dynamic,
 			dateCreated: "2026-01-01T00:00:00.000Z",
-			data: new Uint8Array()
+			data: Converter.bytesToBase64(new Uint8Array())
 		};
 		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
 			body: mockNotarization
@@ -84,7 +85,10 @@ describe("NotarizationRestClient", () => {
 			"GET",
 			expect.objectContaining({ pathParams: { id: "notarization:default:abc123" } })
 		);
-		expect(result).toEqual(mockNotarization);
+		expect(result).toEqual({
+			...mockNotarization,
+			data: Converter.base64ToBytes(mockNotarization.data)
+		});
 	});
 
 	test("get throws when id is empty", async () => {
@@ -124,7 +128,10 @@ describe("NotarizationRestClient", () => {
 			"PUT",
 			expect.objectContaining({
 				pathParams: { id: "notarization:default:abc123" },
-				body: notarization
+				body: {
+					...notarization,
+					data: Converter.bytesToBase64(notarization.data)
+				}
 			})
 		);
 	});

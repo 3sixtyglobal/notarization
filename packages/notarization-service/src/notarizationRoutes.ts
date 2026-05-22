@@ -8,7 +8,7 @@ import type {
 	ITag
 } from "@twin.org/api-models";
 import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { ComponentFactory, Guards } from "@twin.org/core";
+import { Converter, ComponentFactory, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type {
 	INotarizationComponent,
@@ -62,7 +62,7 @@ export function generateRestRoutesNotarization(
 					request: {
 						body: {
 							mode: "dynamic",
-							data: new Uint8Array(),
+							data: "aGVsbG8gd29ybGQ=",
 							description: "My first notarization"
 						}
 					}
@@ -155,7 +155,7 @@ export function generateRestRoutesNotarization(
 								id: "123",
 								mode: "dynamic",
 								dateCreated: "2026-01-01T00:00:00.000Z",
-								data: new Uint8Array(),
+								data: "aGVsbG8gd29ybGQ=",
 								description: "A notarization"
 							}
 						}
@@ -186,7 +186,7 @@ export function generateRestRoutesNotarization(
 							id: "123",
 							mode: "dynamic",
 							dateCreated: "2026-01-01T00:00:00.000Z",
-							data: new Uint8Array(),
+							data: "aGVsbG8gd29ybGQ=",
 							description: "Updated notarization"
 						}
 					}
@@ -273,9 +273,12 @@ export async function notarizationCreate(
 	ContextIdHelper.guard(contextIds, ContextIdKeys.Organization);
 
 	const component = ComponentFactory.get<INotarizationComponent>(componentName);
-	const { namespace, ...notarization } = request.body;
+	const { namespace, data, ...notarization } = request.body;
 	const result = await component.create(
-		notarization,
+		{
+			...notarization,
+			data: Converter.base64ToBytes(data)
+		},
 		namespace,
 		contextIds[ContextIdKeys.Organization]
 	);
@@ -340,8 +343,13 @@ export async function notarizationGet(
 
 	const component = ComponentFactory.get<INotarizationComponent>(componentName);
 
+	const result = await component.get(request.pathParams.id);
+
 	return {
-		body: await component.get(request.pathParams.id)
+		body: {
+			...result,
+			data: Converter.bytesToBase64(result.data)
+		}
 	};
 }
 
@@ -377,6 +385,7 @@ export async function notarizationUpdate(
 	await component.update(
 		{
 			...request.body,
+			data: Converter.base64ToBytes(request.body.data),
 			id: request.pathParams.id
 		},
 		contextIds[ContextIdKeys.Organization]

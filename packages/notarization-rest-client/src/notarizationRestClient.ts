@@ -6,7 +6,7 @@ import type {
 	ICreatedResponse,
 	INoContentResponse
 } from "@twin.org/api-models";
-import { Guards } from "@twin.org/core";
+import { Converter, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type {
 	INotarization,
@@ -60,6 +60,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 		const response = await this.fetch<INotarizationCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
 				...notarization,
+				data: Converter.bytesToBase64(notarization.data),
 				namespace
 			}
 		});
@@ -85,7 +86,10 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 			}
 		);
 
-		return response.body;
+		return {
+			...response.body,
+			data: Converter.base64ToBytes(response.body.data)
+		};
 	}
 
 	/**
@@ -109,7 +113,10 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 
 		await this.fetch<INotarizationUpdateRequest, INoContentResponse>("/:id", "PUT", {
 			pathParams: { id: notarization.id },
-			body: notarization
+			body: {
+				...notarization,
+				data: Converter.bytesToBase64(notarization.data)
+			}
 		});
 	}
 

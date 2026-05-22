@@ -9,5 +9,10 @@ export interface INotarizationGetResponse {
 	/**
 	 * The response body.
 	 */
-	body: INotarization;
+	body: Omit<INotarization, "data"> & {
+		/**
+		 * The notarization data as a base64 encoded string.
+		 */
+		data: string;
+	};
 }

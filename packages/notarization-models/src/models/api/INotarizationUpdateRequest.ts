@@ -19,5 +19,10 @@ export interface INotarizationUpdateRequest {
 	/**
 	 * The request data.
 	 */
-	body: INotarization;
+	body: Omit<INotarization, "data"> & {
+		/**
+		 * The notarization data as a base64 encoded string.
+		 */
+		data: string;
+	};
 }
