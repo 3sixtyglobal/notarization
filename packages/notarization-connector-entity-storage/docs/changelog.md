@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.6](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.5...notarization-connector-entity-storage-v0.0.3-next.6) (2026-05-22)
+
+
+### Features
+
+* update dependencies ([7d1b9cf](https://github.com/iotaledger/twin-notarization/commit/7d1b9cfd5862b681221d8bfb0e5385a3ff7cabd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.5 to 0.0.3-next.6
+
 ## [0.0.3-next.5](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.4...notarization-connector-entity-storage-v0.0.3-next.5) (2026-05-20)
 
 

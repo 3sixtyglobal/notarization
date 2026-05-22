@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3-next.6](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.0.3-next.5...notarization-models-v0.0.3-next.6) (2026-05-22)
+
+
+### Bug Fixes
+
+* rest payload data as base64 ([#7](https://github.com/iotaledger/twin-notarization/issues/7)) ([f8ac0d9](https://github.com/iotaledger/twin-notarization/commit/f8ac0d939bdf3351061464182b1b2f38e8fe46fc))
+
 ## [0.0.3-next.5](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.0.3-next.4...notarization-models-v0.0.3-next.5) (2026-05-20)
 
 
