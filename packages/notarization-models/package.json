@@ -4,7 +4,7 @@
 	"description": "Shared notarization interfaces, request and response models, and connector contracts.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/notarization.git",
+		"url": "git+https://github.com/iotaledger/twin-notarization.git",
 		"directory": "packages/notarization-models"
 	},
 	"author": "martyn.janes@iota.org",
@@ -76,7 +76,7 @@
 		"schemas"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/notarization/issues"
+		"url": "git+https://github.com/iotaledger/twin-notarization/issues"
 	},
 	"homepage": "https://twindev.org"
 }
