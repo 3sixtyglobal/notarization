@@ -4,7 +4,7 @@
 	"description": "Modular Notarization connectors, services, and tooling.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/notarization.git"
+		"url": "git+https://github.com/iotaledger/twin-notarization.git"
 	},
 	"author": "martyn.janes@iota.org",
 	"license": "Apache-2.0",
@@ -62,7 +62,7 @@
 	],
 	"type": "module",
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/notarization/issues"
+		"url": "git+https://github.com/iotaledger/twin-notarization/issues"
 	},
 	"homepage": "https://twindev.org"
 }
