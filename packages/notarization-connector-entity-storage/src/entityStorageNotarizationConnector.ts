@@ -421,6 +421,7 @@ export class EntityStorageNotarizationConnector implements INotarizationConnecto
 	/**
 	 * Validates and enforces lock constraints based on notarization mode.
 	 * @param notarization The notarization to validate and enforce locks on.
+	 * @throws {GeneralError} If the lock constraints are invalid for the notarization mode.
 	 * @internal
 	 */
 	private validateAndEnforceLocks(notarization: Omit<INotarization, "id" | "dateCreated">): void {

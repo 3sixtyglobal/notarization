@@ -183,6 +183,7 @@ export class NotarizationService implements INotarizationComponent {
 	 * Get the connector from the id.
 	 * @param id The id of the notarization in urn format.
 	 * @returns The connector.
+	 * @throws {GeneralError} If the namespace does not match.
 	 * @internal
 	 */
 	private getConnector(id: string): INotarizationConnector {

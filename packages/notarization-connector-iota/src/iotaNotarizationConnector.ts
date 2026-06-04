@@ -357,6 +357,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 *
 	 * @param controllerIdentity The identity performing the transaction.
 	 * @param transactionBuilder The transaction builder.
+	 * @param transactionBuilder.build A function that builds the transaction bytes and signers.
 	 * @param notarizationClient The notarization client.
 	 * @param dryRunLabel An optional label for dry run transactions when cost logging is enabled.
 	 * @returns The execution result.
@@ -402,7 +403,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
 	 * Extract the created object id from transaction response object changes.
 	 * @param result The posted transaction result.
+	 * @param result.objectChanges The list of object changes from the transaction response.
 	 * @returns The created object id.
+	 * @throws {GeneralError} If the creation output is invalid or missing.
 	 * @internal
 	 */
 	private extractCreatedObjectId(result: { objectChanges?: unknown }): string {
@@ -428,6 +431,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Parse and validate a notarization id into the underlying object id.
 	 * @param id The notarization id.
 	 * @returns The object id.
+	 * @throws {GeneralError} If the namespace does not match.
 	 * @internal
 	 */
 	private objectIdFromUrn(id: string): string {
@@ -454,7 +458,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 	/**
 	 * Convert a notarization lock into an IOTA time lock.
-	 * @param lock The lock.
+	 * @param untilDestroyed Whether the lock should last until destroyed.
+	 * @param dateTime The optional date-time at which the lock should be released.
 	 * @returns The IOTA time lock.
 	 * @internal
 	 */
@@ -474,6 +479,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Convert an ISO date-time string to unix seconds.
 	 * @param isoDateTime The ISO date-time.
 	 * @returns The unix timestamp in seconds.
+	 * @throws {GeneralError} If the date-time string is invalid.
 	 * @internal
 	 */
 	private toUnixSeconds(isoDateTime: string): number {
@@ -557,6 +563,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
 	 * Handles an abort code from a transaction result if the transaction was aborted.
 	 * @param response The transaction result to handle the abort code from.
+	 * @throws {GeneralError} If the transaction was aborted with a known or unknown abort code.
 	 * @internal
 	 */
 	private handleAbortCode(response: IIotaTransactionBlockResponse): void {
