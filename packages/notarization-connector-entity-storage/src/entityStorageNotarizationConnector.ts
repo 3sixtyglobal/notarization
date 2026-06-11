@@ -57,7 +57,7 @@ export class EntityStorageNotarizationConnector implements INotarizationConnecto
 		this._notarizationEntityStorage = EntityStorageConnectorFactory.get<
 			IEntityStorageConnector<Notarization>
 		>(options?.notarizationEntityStorageType ?? "notarization");
-		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 	}
 
 	/**
