@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.3-next.7](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.0.3-next.6...notarization-service-v0.0.3-next.7) (2026-06-11)
+
+
+### Miscellaneous Chores
+
+* **notarization-service:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.6 to 0.0.3-next.7
+  * devDependencies
+    * @twin.org/notarization-connector-entity-storage bumped from 0.0.3-next.6 to 0.0.3-next.7
+
 ## [0.0.3-next.6](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.0.3-next.5...notarization-service-v0.0.3-next.6) (2026-05-22)
 
 

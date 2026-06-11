@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.3-next.7](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.0.3-next.6...notarization-rest-client-v0.0.3-next.7) (2026-06-11)
+
+
+### Miscellaneous Chores
+
+* **notarization-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.6 to 0.0.3-next.7
+
 ## [0.0.3-next.6](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.0.3-next.5...notarization-rest-client-v0.0.3-next.6) (2026-05-22)
 
 
