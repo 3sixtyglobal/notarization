@@ -23,9 +23,3 @@ notarization
 > `optional` **loggingComponentType?**: `string`
 
 The logging component type.
-
-#### Default
-
-```ts
-logging
-```
