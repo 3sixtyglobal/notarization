@@ -22,7 +22,7 @@ import type {
 import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
 
 /**
- * The source for the routes.
+ * The source identifier used in guard error messages for notarization routes.
  */
 const ROUTES_SOURCE = "notarizationRoutes";
 

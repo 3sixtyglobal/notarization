@@ -95,6 +95,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	/**
 	 * Remove an existing notarization.
 	 * @param id The id of the notarization to remove.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	public async remove(id: string): Promise<void> {
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);
@@ -107,6 +108,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	/**
 	 * Update an existing notarization.
 	 * @param notarization The notarization to update.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	public async update(notarization: INotarization): Promise<void> {
 		Guards.object(NotarizationRestClient.CLASS_NAME, nameof(notarization), notarization);
@@ -124,6 +126,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	 * Transfer an existing notarization.
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	public async transfer(id: string, recipientAddress: string): Promise<void> {
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);

@@ -110,7 +110,7 @@ export class NotarizationService implements INotarizationComponent {
 	 * Remove an existing notarization.
 	 * @param id The id of the notarization to remove.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	public async remove(id: string, controllerIdentity?: string): Promise<void> {
 		Urn.guard(NotarizationService.CLASS_NAME, nameof(id), id);
@@ -132,7 +132,7 @@ export class NotarizationService implements INotarizationComponent {
 	 * Update an existing notarization.
 	 * @param notarization The notarization to update.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	public async update(notarization: INotarization, controllerIdentity?: string): Promise<void> {
 		Guards.object(NotarizationService.CLASS_NAME, nameof(notarization), notarization);
@@ -156,7 +156,7 @@ export class NotarizationService implements INotarizationComponent {
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	public async transfer(
 		id: string,

@@ -21,7 +21,7 @@ import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizatio
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
 
 /**
- * Dummy IOTA connector for notarization scaffolding.
+ * IOTA on-chain connector for notarization operations.
  */
 export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
@@ -173,7 +173,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Remove an existing notarization.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param id The id of the notarization to remove.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	public async remove(controllerIdentity: string, id: string): Promise<void> {
 		Guards.stringValue(
@@ -214,7 +214,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Update an existing notarization.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param notarization The notarization to update.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	public async update(controllerIdentity: string, notarization: INotarization): Promise<void> {
 		Guards.stringValue(
@@ -260,7 +260,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	public async transfer(
 		controllerIdentity: string,
