@@ -31,7 +31,7 @@ initSchema();
 
 export const notarizationStore = new MemoryEntityStorageConnector<Notarization>({
 	entitySchema: nameof<Notarization>(),
-  config: { storageKey: "notarization" }
+	config: { storageKey: "notarization" }
 });
 
 EntityStorageConnectorFactory.register("notarization", () => notarizationStore);
