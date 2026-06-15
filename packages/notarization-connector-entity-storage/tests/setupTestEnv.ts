@@ -30,7 +30,8 @@ export const TEST_ADDRESS_2 = "test-address-2";
 initSchema();
 
 export const notarizationStore = new MemoryEntityStorageConnector<Notarization>({
-	entitySchema: nameof<Notarization>()
+	entitySchema: nameof<Notarization>(),
+  config: { storageKey: "notarization" }
 });
 
 EntityStorageConnectorFactory.register("notarization", () => notarizationStore);
