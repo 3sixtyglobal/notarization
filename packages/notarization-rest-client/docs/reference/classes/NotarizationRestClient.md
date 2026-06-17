@@ -138,6 +138,8 @@ The id of the notarization to remove.
 
 `Promise`\<`void`\>
 
+A promise that resolves when the notarization has been removed.
+
 #### Implementation of
 
 `INotarizationComponent.remove`
@@ -161,6 +163,8 @@ The notarization to update.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the notarization has been updated.
 
 #### Implementation of
 
@@ -191,6 +195,8 @@ The recipient address.
 #### Returns
 
 `Promise`\<`void`\>
+
+A promise that resolves when the notarization has been transferred.
 
 #### Implementation of
 

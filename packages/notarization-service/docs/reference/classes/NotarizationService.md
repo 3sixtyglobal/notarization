@@ -142,7 +142,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been removed.
 
 #### Implementation of
 
@@ -174,7 +174,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been updated.
 
 #### Implementation of
 
@@ -212,7 +212,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been transferred.
 
 #### Implementation of
 
