@@ -1,7 +1,5 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
-import { Transaction } from "@iota/iota-sdk/transactions";
 import {
 	NotarizationClient,
 	NotarizationClientReadOnly,
@@ -326,25 +324,14 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 */
 	private async buildWritableClient(controllerIdentity: string): Promise<NotarizationClient> {
 		const readOnlyClient = await this.buildReadOnlyClient();
-		const keyPair = await Iota.getKeyPair(
+
+		const signer = await Iota.getTransactionSigner(
 			this._vaultConnector,
 			this._config,
 			controllerIdentity,
 			this._config.accountAddressIndex ?? 0,
 			this._config.walletAddressIndex ?? 0
 		);
-		const signerKeyPair = new Ed25519Keypair({
-			publicKey: keyPair.publicKey,
-			secretKey: keyPair.privateKey
-		});
-
-		const signer = {
-			sign: async (txDataBcs: Uint8Array): Promise<string> =>
-				(await signerKeyPair.signTransaction(txDataBcs)).signature,
-			publicKey: async () => signerKeyPair.getPublicKey(),
-			iotaPublicKeyBytes: async () => signerKeyPair.getPublicKey().toIotaBytes(),
-			keyId: () => Iota.publicKeyToAddress(keyPair.publicKey)
-		};
 
 		return NotarizationClient.create(readOnlyClient, signer);
 	}
@@ -372,7 +359,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		dryRunLabel: string
 	): Promise<IIotaTransactionBlockResponse> {
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
-		const transaction = Transaction.from(txBytes);
+		const transaction = Iota.transactionFromBytes(txBytes);
 		const owner = await Iota.getAddress(
 			this._vaultConnector,
 			this._config,
