@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3-next.8](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.7...notarization-connector-entity-storage-v0.0.3-next.8) (2026-06-17)
+
+
+### Bug Fixes
+
+* use async getStore in tests ([d787afe](https://github.com/iotaledger/twin-notarization/commit/d787afef57da28877771fed7f2ae0631889f7d18))
+* use async getStore in tests ([b616491](https://github.com/iotaledger/twin-notarization/commit/b616491426845c917d8625c0f123941b48226c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.7 to 0.0.3-next.8
+
 ## [0.0.3-next.7](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-entity-storage-v0.0.3-next.6...notarization-connector-entity-storage-v0.0.3-next.7) (2026-06-11)
 
 

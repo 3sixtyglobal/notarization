@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.3-next.8](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.0.3-next.7...notarization-connector-iota-v0.0.3-next.8) (2026-06-17)
+
+
+### Features
+
+* add vault signers ([#12](https://github.com/iotaledger/twin-notarization/issues/12)) ([a17166c](https://github.com/iotaledger/twin-notarization/commit/a17166c964eb69ac9d21a28e97e38de8355b6f01))
+
+
+### Bug Fixes
+
+* use async getStore in tests ([b616491](https://github.com/iotaledger/twin-notarization/commit/b616491426845c917d8625c0f123941b48226c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.0.3-next.7 to 0.0.3-next.8
+
 ## [0.0.3-next.7](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.0.3-next.6...notarization-connector-iota-v0.0.3-next.7) (2026-06-11)
 
 
