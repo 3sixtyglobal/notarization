@@ -34,6 +34,7 @@ export class NotarizationService implements INotarizationComponent {
 	/**
 	 * Create a new instance of NotarizationService.
 	 * @param options The constructor options.
+	 * @throws {GeneralError} If no notarization connectors are registered.
 	 */
 	constructor(options?: INotarizationServiceConstructorOptions) {
 		const names = NotarizationConnectorFactory.names();
