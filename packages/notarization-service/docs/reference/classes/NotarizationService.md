@@ -26,6 +26,10 @@ The constructor options.
 
 `NotarizationService`
 
+#### Throws
+
+If no notarization connectors are registered.
+
 ## Properties
 
 ### CLASS\_NAME {#class_name}
