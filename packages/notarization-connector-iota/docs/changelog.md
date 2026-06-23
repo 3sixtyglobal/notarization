@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.9.0-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.9.0-next.0...notarization-connector-iota-v0.9.0-next.1) (2026-06-23)
+
+
+### Features
+
+* add vault signers ([#12](https://github.com/iotaledger/twin-notarization/issues/12)) ([a17166c](https://github.com/iotaledger/twin-notarization/commit/a17166c964eb69ac9d21a28e97e38de8355b6f01))
+* improve error handling ([73c6eb5](https://github.com/iotaledger/twin-notarization/commit/73c6eb562c529422a709de60e15da7d4c283a33b))
+* improve error handling ([5435b6f](https://github.com/iotaledger/twin-notarization/commit/5435b6f7c3c0a2d4a314020f3c3ab2bbff11ba62))
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* remove default loggers ([f057b06](https://github.com/iotaledger/twin-notarization/commit/f057b0628b836925172e6ef27df082ed8bf1c789))
+* typescript 6 update ([93ebcba](https://github.com/iotaledger/twin-notarization/commit/93ebcbaa8bd86caf81fcbac838aa87ef9c0e4da8))
+* update dependencies ([3d24bd2](https://github.com/iotaledger/twin-notarization/commit/3d24bd2bfbf0e8fac0c60b466fbfc18bf4b6fa56))
+
+
+### Bug Fixes
+
+* use async getStore in tests ([b616491](https://github.com/iotaledger/twin-notarization/commit/b616491426845c917d8625c0f123941b48226c5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.0-next.0 to 0.9.0-next.1
+
 ## [0.0.3-next.8](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.0.3-next.7...notarization-connector-iota-v0.0.3-next.8) (2026-06-17)
 
 
