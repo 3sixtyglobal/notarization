@@ -9,7 +9,12 @@ export interface INotarizationCreateRequest {
 	/**
 	 * The request data.
 	 */
-	body: Omit<INotarization, "id" | "dateCreated"> & {
+	body: Omit<INotarization, "id" | "dateCreated" | "data"> & {
+		/**
+		 * The notarization data as a base64 encoded string.
+		 */
+		data: string;
+
 		/**
 		 * The namespace of the connector to use for the notarization, defaults to component configured namespace.
 		 */

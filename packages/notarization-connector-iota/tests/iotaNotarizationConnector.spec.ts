@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { Urn } from "@twin.org/core";
 import { NotarizationMode } from "@twin.org/notarization-models";
-import { beforeAll, describe, expect, test } from "vitest";
 import {
 	TEST_ADDRESS_2,
 	TEST_CLIENT_OPTIONS,
@@ -37,7 +36,7 @@ describe("IotaNotarizationConnector", () => {
 				},
 				vaultMnemonicId: TEST_MNEMONIC_NAME,
 				network: TEST_NETWORK,
-				enableCostLogging: true
+				enableCostLogging: false
 			}
 		});
 	});

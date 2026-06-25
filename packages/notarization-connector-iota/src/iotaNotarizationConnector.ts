@@ -1,7 +1,5 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
-import { Transaction } from "@iota/iota-sdk/transactions";
 import {
 	NotarizationClient,
 	NotarizationClientReadOnly,
@@ -11,17 +9,17 @@ import {
 	type OnChainNotarization
 } from "@iota/notarization/node/index.js";
 import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@twin.org/core";
-import { Iota } from "@twin.org/dlt-iota";
+import { type IIotaTransactionBlockResponse, Iota } from "@twin.org/dlt-iota";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import type { INotarization, INotarizationConnector } from "@twin.org/notarization-models";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
-import { WalletConnectorFactory, type IWalletConnector } from "@twin.org/wallet-models";
+import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizationConnectorConfig.js";
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
 
 /**
- * Dummy IOTA connector for notarization scaffolding.
+ * IOTA on-chain connector for notarization operations.
  */
 export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
@@ -38,19 +36,13 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * The connector configuration.
 	 * @internal
 	 */
-	private readonly _config: IIotaNotarizationConnectorConstructorOptions["config"];
+	private readonly _config: IIotaNotarizationConnectorConfig;
 
 	/**
 	 * The vault connector.
 	 * @internal
 	 */
 	private readonly _vaultConnector: IVaultConnector;
-
-	/**
-	 * The wallet connector.
-	 * @internal
-	 */
-	private readonly _walletConnector: IWalletConnector;
 
 	/**
 	 * The logging component.
@@ -68,8 +60,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		this._config = options.config;
 		Iota.populateConfig(this._config);
 		this._vaultConnector = VaultConnectorFactory.get(options.vaultConnectorType ?? "vault");
-		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
-		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType ?? "logging");
+		this._logging = ComponentFactory.getIfExists(options?.loggingComponentType);
 	}
 
 	/**
@@ -115,7 +106,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 				const result = await this.postTransaction(
 					controllerIdentity,
 					tx.finish(),
-					notarizationClient
+					notarizationClient,
+					"create"
 				);
 				return this.toNotarizationId(this.extractCreatedObjectId(result));
 			}
@@ -141,7 +133,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			const result = await this.postTransaction(
 				controllerIdentity,
 				tx.finish(),
-				notarizationClient
+				notarizationClient,
+				"create"
 			);
 
 			return this.toNotarizationId(this.extractCreatedObjectId(result));
@@ -178,7 +171,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Remove an existing notarization.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param id The id of the notarization to remove.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	public async remove(controllerIdentity: string, id: string): Promise<void> {
 		Guards.stringValue(
@@ -202,7 +195,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			await this.postTransaction(
 				controllerIdentity,
 				notarizationClient.destroy(objectId),
-				notarizationClient
+				notarizationClient,
+				"remove"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -218,7 +212,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Update an existing notarization.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param notarization The notarization to update.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	public async update(controllerIdentity: string, notarization: INotarization): Promise<void> {
 		Guards.stringValue(
@@ -246,7 +240,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 					State.fromBytes(notarization.data, notarization.description),
 					objectId
 				),
-				notarizationClient
+				notarizationClient,
+				"update"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -263,7 +258,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @param controllerIdentity The identity to perform the notarization operation with.
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	public async transfer(
 		controllerIdentity: string,
@@ -296,7 +291,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			await this.postTransaction(
 				controllerIdentity,
 				notarizationClient.transferNotarization(objectId, recipientAddress),
-				notarizationClient
+				notarizationClient,
+				"transfer"
 			);
 		} catch (error) {
 			throw new GeneralError(
@@ -328,27 +324,14 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 */
 	private async buildWritableClient(controllerIdentity: string): Promise<NotarizationClient> {
 		const readOnlyClient = await this.buildReadOnlyClient();
-		const address = await this.getControllerAddress(controllerIdentity);
 
-		const seed = await Iota.getSeed(this._config, this._vaultConnector, controllerIdentity);
-		const keyPair = Iota.getKeyPair(
-			seed,
-			this._config.coinType ?? Iota.DEFAULT_COIN_TYPE,
-			0,
+		const signer = await Iota.getTransactionSigner(
+			this._vaultConnector,
+			this._config,
+			controllerIdentity,
+			this._config.accountAddressIndex ?? 0,
 			this._config.walletAddressIndex ?? 0
 		);
-		const signerKeyPair = new Ed25519Keypair({
-			publicKey: keyPair.publicKey,
-			secretKey: keyPair.privateKey
-		});
-
-		const signer = {
-			sign: async (txDataBcs: Uint8Array): Promise<string> =>
-				(await signerKeyPair.signTransaction(txDataBcs)).signature,
-			publicKey: async () => signerKeyPair.getPublicKey(),
-			iotaPublicKeyBytes: async () => signerKeyPair.getPublicKey().toIotaBytes(),
-			keyId: () => address
-		};
 
 		return NotarizationClient.create(readOnlyClient, signer);
 	}
@@ -361,7 +344,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 *
 	 * @param controllerIdentity The identity performing the transaction.
 	 * @param transactionBuilder The transaction builder.
+	 * @param transactionBuilder.build A function that builds the transaction bytes and signers.
 	 * @param notarizationClient The notarization client.
+	 * @param dryRunLabel An optional label for dry run transactions when cost logging is enabled.
 	 * @returns The execution result.
 	 * @internal
 	 */
@@ -370,11 +355,18 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		transactionBuilder: {
 			build: (client: NotarizationClient) => Promise<[Uint8Array, string[], unknown]>;
 		},
-		notarizationClient: NotarizationClient
-	): Promise<{ objectChanges?: unknown }> {
+		notarizationClient: NotarizationClient,
+		dryRunLabel: string
+	): Promise<IIotaTransactionBlockResponse> {
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
-		const transaction = Transaction.from(txBytes);
-		const owner = await this.getControllerAddress(controllerIdentity);
+		const transaction = Iota.transactionFromBytes(txBytes);
+		const owner = await Iota.getAddress(
+			this._vaultConnector,
+			this._config,
+			controllerIdentity,
+			this._config.accountAddressIndex ?? 0,
+			this._config.walletAddressIndex ?? 0
+		);
 		const iotaClient = Iota.createClient(this._config);
 
 		const response = await Iota.prepareAndPostTransaction(
@@ -384,18 +376,23 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			controllerIdentity,
 			iotaClient,
 			owner,
-			transaction
+			transaction,
+			{
+				dryRunLabel: this._config.enableCostLogging ? dryRunLabel : undefined
+			}
 		);
 
-		return {
-			objectChanges: response.objectChanges
-		};
+		this.handleAbortCode(response);
+
+		return response;
 	}
 
 	/**
 	 * Extract the created object id from transaction response object changes.
 	 * @param result The posted transaction result.
+	 * @param result.objectChanges The list of object changes from the transaction response.
 	 * @returns The created object id.
+	 * @throws {GeneralError} If the creation output is invalid or missing.
 	 * @internal
 	 */
 	private extractCreatedObjectId(result: { objectChanges?: unknown }): string {
@@ -418,26 +415,10 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	}
 
 	/**
-	 * Get the address for the controller identity.
-	 * @param controllerIdentity The identity.
-	 * @returns The configured address.
-	 * @internal
-	 */
-	private async getControllerAddress(controllerIdentity: string): Promise<string> {
-		const addresses = await this._walletConnector.getAddresses(
-			controllerIdentity,
-			0,
-			this._config.walletAddressIndex ?? 0,
-			1
-		);
-
-		return addresses[0];
-	}
-
-	/**
 	 * Parse and validate a notarization id into the underlying object id.
 	 * @param id The notarization id.
 	 * @returns The object id.
+	 * @throws {GeneralError} If the namespace does not match.
 	 * @internal
 	 */
 	private objectIdFromUrn(id: string): string {
@@ -464,7 +445,8 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 	/**
 	 * Convert a notarization lock into an IOTA time lock.
-	 * @param lock The lock.
+	 * @param untilDestroyed Whether the lock should last until destroyed.
+	 * @param dateTime The optional date-time at which the lock should be released.
 	 * @returns The IOTA time lock.
 	 * @internal
 	 */
@@ -484,6 +466,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Convert an ISO date-time string to unix seconds.
 	 * @param isoDateTime The ISO date-time.
 	 * @returns The unix timestamp in seconds.
+	 * @throws {GeneralError} If the date-time string is invalid.
 	 * @internal
 	 */
 	private toUnixSeconds(isoDateTime: string): number {
@@ -562,5 +545,43 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			immutableDescription: onChainNotarization.immutableMetadata.description,
 			...locks
 		};
+	}
+
+	/**
+	 * Handles an abort code from a transaction result if the transaction was aborted.
+	 * @param response The transaction result to handle the abort code from.
+	 * @throws {GeneralError} If the transaction was aborted with a known or unknown abort code.
+	 * @internal
+	 */
+	private handleAbortCode(response: IIotaTransactionBlockResponse): void {
+		const abortCode = Iota.extractAbortCode(response);
+		if (!Is.empty(abortCode)) {
+			if (abortCode === 0) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "updateWhileLocked");
+			} else if (abortCode === 1) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "destroyWhileLocked");
+			} else if (abortCode === 2) {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "lockTimeNotSatisfied");
+			} else if (abortCode === 3) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"untilDestroyedLockNotAllowed"
+				);
+			} else if (abortCode === 4) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"dynamicNotarizationInvariants"
+				);
+			} else if (abortCode === 5) {
+				throw new GeneralError(
+					IotaNotarizationConnector.CLASS_NAME,
+					"lockedNotarizationInvariants"
+				);
+			} else {
+				throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "unknownAbortCode", {
+					abortCode
+				});
+			}
+		}
 	}
 }

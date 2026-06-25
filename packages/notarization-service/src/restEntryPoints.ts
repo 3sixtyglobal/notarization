@@ -3,6 +3,9 @@
 import type { IRestRouteEntryPoint } from "@twin.org/api-models";
 import { generateRestRoutesNotarization, tagsNotarization } from "./notarizationRoutes.js";
 
+/**
+ * REST entry points for the notarization service.
+ */
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
 		name: "notarization",

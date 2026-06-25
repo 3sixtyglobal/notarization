@@ -2,13 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IHttpRequestContext } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { ComponentFactory, Factory } from "@twin.org/core";
+import { Converter, ComponentFactory, Factory } from "@twin.org/core";
 import {
 	NotarizationConnectorFactory,
 	type INotarization,
 	type INotarizationComponent
 } from "@twin.org/notarization-models";
-import { afterEach, describe, expect, test } from "vitest";
 import {
 	generateRestRoutesNotarization,
 	notarizationCreate,
@@ -131,7 +130,7 @@ describe("notarizationRoutes", () => {
 					notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {
 						body: {
 							mode: "dynamic",
-							data: new Uint8Array([1, 2, 3]),
+							data: Converter.bytesToBase64(new Uint8Array([1, 2, 3])),
 							description: "test"
 						}
 					})
@@ -149,7 +148,7 @@ describe("notarizationRoutes", () => {
 					notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {
 						body: {
 							mode: "dynamic",
-							data: new Uint8Array(),
+							data: Converter.bytesToBase64(new Uint8Array()),
 							namespace: "default-connector"
 						}
 					})
@@ -172,7 +171,7 @@ describe("notarizationRoutes", () => {
 			registerMockComponent();
 			await expect(
 				notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {
-					body: { mode: "dynamic", data: new Uint8Array() }
+					body: { mode: "dynamic", data: Converter.bytesToBase64(new Uint8Array()) }
 				})
 			).rejects.toThrow();
 		});
@@ -243,7 +242,10 @@ describe("notarizationRoutes", () => {
 				async () =>
 					notarizationUpdate(MOCK_CONTEXT, COMPONENT_NAME, {
 						pathParams: { id: NOTARIZATION_ID },
-						body: SAMPLE_NOTARIZATION
+						body: {
+							...SAMPLE_NOTARIZATION,
+							data: Converter.bytesToBase64(SAMPLE_NOTARIZATION.data)
+						}
 					})
 			);
 
@@ -255,7 +257,10 @@ describe("notarizationRoutes", () => {
 			await expect(
 				ContextIdStore.run({ [ContextIdKeys.Organization]: ORG_IDENTITY }, async () =>
 					notarizationUpdate(MOCK_CONTEXT, COMPONENT_NAME, {
-						body: SAMPLE_NOTARIZATION
+						body: {
+							...SAMPLE_NOTARIZATION,
+							data: Converter.bytesToBase64(SAMPLE_NOTARIZATION.data)
+						}
 					} as never)
 				)
 			).rejects.toThrow();
@@ -277,7 +282,10 @@ describe("notarizationRoutes", () => {
 			await expect(
 				notarizationUpdate(MOCK_CONTEXT, COMPONENT_NAME, {
 					pathParams: { id: NOTARIZATION_ID },
-					body: SAMPLE_NOTARIZATION
+					body: {
+						...SAMPLE_NOTARIZATION,
+						data: Converter.bytesToBase64(SAMPLE_NOTARIZATION.data)
+					}
 				})
 			).rejects.toThrow();
 		});

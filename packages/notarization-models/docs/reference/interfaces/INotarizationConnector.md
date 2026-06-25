@@ -82,7 +82,7 @@ The id of the notarization to remove.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been removed.
 
 ***
 
@@ -110,7 +110,7 @@ The notarization to update.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been updated.
 
 ***
 
@@ -144,4 +144,4 @@ The recipient address.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been transferred.

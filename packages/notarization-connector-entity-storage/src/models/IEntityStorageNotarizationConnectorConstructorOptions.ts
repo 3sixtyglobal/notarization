@@ -13,7 +13,6 @@ export interface IEntityStorageNotarizationConnectorConstructorOptions {
 
 	/**
 	 * The logging component type.
-	 * @default logging
 	 */
 	loggingComponentType?: string;
 }

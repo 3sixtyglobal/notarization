@@ -6,7 +6,7 @@ import type {
 	ICreatedResponse,
 	INoContentResponse
 } from "@twin.org/api-models";
-import { Guards } from "@twin.org/core";
+import { Converter, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type {
 	INotarization,
@@ -60,6 +60,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 		const response = await this.fetch<INotarizationCreateRequest, ICreatedResponse>("/", "POST", {
 			body: {
 				...notarization,
+				data: Converter.bytesToBase64(notarization.data),
 				namespace
 			}
 		});
@@ -85,12 +86,16 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 			}
 		);
 
-		return response.body;
+		return {
+			...response.body,
+			data: Converter.base64ToBytes(response.body.data)
+		};
 	}
 
 	/**
 	 * Remove an existing notarization.
 	 * @param id The id of the notarization to remove.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	public async remove(id: string): Promise<void> {
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);
@@ -103,13 +108,17 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	/**
 	 * Update an existing notarization.
 	 * @param notarization The notarization to update.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	public async update(notarization: INotarization): Promise<void> {
 		Guards.object(NotarizationRestClient.CLASS_NAME, nameof(notarization), notarization);
 
 		await this.fetch<INotarizationUpdateRequest, INoContentResponse>("/:id", "PUT", {
 			pathParams: { id: notarization.id },
-			body: notarization
+			body: {
+				...notarization,
+				data: Converter.bytesToBase64(notarization.data)
+			}
 		});
 	}
 
@@ -117,6 +126,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	 * Transfer an existing notarization.
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	public async transfer(id: string, recipientAddress: string): Promise<void> {
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);

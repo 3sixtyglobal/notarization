@@ -1,6 +1,6 @@
 # Class: IotaNotarizationConnector
 
-Dummy IOTA connector for notarization scaffolding.
+IOTA on-chain connector for notarization operations.
 
 ## Implements
 
@@ -144,7 +144,7 @@ The id of the notarization to remove.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been removed.
 
 #### Implementation of
 
@@ -176,7 +176,7 @@ The notarization to update.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been updated.
 
 #### Implementation of
 
@@ -214,7 +214,7 @@ The recipient address.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been transferred.
 
 #### Implementation of
 

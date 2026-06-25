@@ -13,14 +13,7 @@ export interface IIotaNotarizationConnectorConstructorOptions {
 	vaultConnectorType?: string;
 
 	/**
-	 * The wallet connector type to use.
-	 * @default wallet
-	 */
-	walletConnectorType?: string;
-
-	/**
 	 * The logging component type.
-	 * @default logging
 	 */
 	loggingComponentType?: string;
 

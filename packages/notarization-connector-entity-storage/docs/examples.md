@@ -18,7 +18,8 @@ import {
 initSchema();
 
 const memoryStore = new MemoryEntityStorageConnector<Notarization>({
-  entitySchema: nameof<Notarization>()
+  entitySchema: nameof<Notarization>(),
+  config: { storageKey: 'notarization' }
 });
 
 EntityStorageConnectorFactory.register('notarization', () => memoryStore);
@@ -41,7 +42,11 @@ await connector.update('did:example:controller', {
   data: new Uint8Array([9, 8, 7, 6])
 });
 
-await connector.transfer('did:example:controller', id, 'did:example:new-owner');
+await connector.transfer(
+  'did:example:controller',
+  id,
+  '0x1234567890abcdef1234567890abcdef12345678'
+);
 await connector.remove('did:example:controller', id);
 ```
 

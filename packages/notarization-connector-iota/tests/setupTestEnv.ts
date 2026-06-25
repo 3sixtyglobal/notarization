@@ -3,6 +3,7 @@
 import path from "node:path";
 import { Guards, Is } from "@twin.org/core";
 import { Bip39 } from "@twin.org/crypto";
+import { Iota } from "@twin.org/dlt-iota";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
 import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
@@ -13,8 +14,6 @@ import {
 	type VaultSecret
 } from "@twin.org/vault-connector-entity-storage";
 import { VaultConnectorFactory } from "@twin.org/vault-models";
-import { IotaFaucetConnector, IotaWalletConnector } from "@twin.org/wallet-connector-iota";
-import { FaucetConnectorFactory, WalletConnectorFactory } from "@twin.org/wallet-models";
 import dotenv from "dotenv";
 
 console.debug("Setting up IOTA notarization test environment from .env and .env.dev files");
@@ -80,7 +79,8 @@ EntityStorageConnectorFactory.register(
 	"vault-key",
 	() =>
 		new MemoryEntityStorageConnector<VaultKey>({
-			entitySchema: nameof<VaultKey>()
+			entitySchema: nameof<VaultKey>(),
+			config: { storageKey: "vault-key" }
 		})
 );
 
@@ -88,7 +88,8 @@ EntityStorageConnectorFactory.register(
 	"vault-secret",
 	() =>
 		new MemoryEntityStorageConnector<VaultSecret>({
-			entitySchema: nameof<VaultSecret>()
+			entitySchema: nameof<VaultSecret>(),
+			config: { storageKey: "vault-secret" }
 		})
 );
 
@@ -101,35 +102,38 @@ await TEST_VAULT_CONNECTOR.setSecret(
 	TEST_2_MNEMONIC
 );
 
-export const TEST_FAUCET_CONNECTOR = new IotaFaucetConnector({
-	config: {
-		clientOptions: TEST_CLIENT_OPTIONS,
-		endpoint: TEST_FAUCET_ENDPOINT,
-		vaultMnemonicId: TEST_MNEMONIC_NAME,
-		network: TEST_NETWORK
-	}
-});
-FaucetConnectorFactory.register("faucet", () => TEST_FAUCET_CONNECTOR);
+export const TEST_IOTA_CONFIG = {
+	clientOptions: TEST_CLIENT_OPTIONS,
+	network: TEST_NETWORK,
+	coinType: TEST_COIN_TYPE,
+	vaultMnemonicId: TEST_MNEMONIC_NAME
+};
 
-export const TEST_WALLET_CONNECTOR = new IotaWalletConnector({
-	config: {
-		clientOptions: TEST_CLIENT_OPTIONS,
-		vaultMnemonicId: TEST_MNEMONIC_NAME,
-		coinType: TEST_COIN_TYPE,
-		network: TEST_NETWORK
-	}
-});
-WalletConnectorFactory.register("wallet", () => TEST_WALLET_CONNECTOR);
-
-const testAddresses = await TEST_WALLET_CONNECTOR.getAddresses(TEST_USER_IDENTITY, 0, 0, 1);
-const testAddresses2 = await TEST_WALLET_CONNECTOR.getAddresses(TEST_USER_IDENTITY_2, 0, 0, 1);
+const testAddresses = await Iota.getAddresses(
+	TEST_VAULT_CONNECTOR,
+	TEST_IOTA_CONFIG,
+	TEST_USER_IDENTITY,
+	0,
+	0,
+	1
+);
+const testAddresses2 = await Iota.getAddresses(
+	TEST_VAULT_CONNECTOR,
+	TEST_IOTA_CONFIG,
+	TEST_USER_IDENTITY_2,
+	0,
+	0,
+	1
+);
 
 export const TEST_ADDRESS_1 = testAddresses[0];
 export const TEST_ADDRESS_2 = testAddresses2[0];
 
 async function ensureFundsForAddress(identity: string, address: string): Promise<void> {
 	try {
-		const success = await TEST_WALLET_CONNECTOR.ensureBalance(
+		const success = await Iota.ensureBalance(
+			TEST_IOTA_CONFIG,
+			TEST_FAUCET_ENDPOINT,
 			identity,
 			address,
 			MIN_BALANCE_REQUIRED,
@@ -137,7 +141,7 @@ async function ensureFundsForAddress(identity: string, address: string): Promise
 		);
 
 		if (!success) {
-			const currentBalance = await TEST_WALLET_CONNECTOR.getBalance(identity, address);
+			const currentBalance = await Iota.getBalance(TEST_IOTA_CONFIG, address);
 			console.warn(
 				`[setupTestEnv] Faucet/ensureBalance did not top up ${address}. Continuing with balance ${currentBalance}.`
 			);

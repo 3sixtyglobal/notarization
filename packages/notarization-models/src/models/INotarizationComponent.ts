@@ -31,7 +31,7 @@ export interface INotarizationComponent extends IComponent {
 	 * Remove an existing notarization.
 	 * @param id The id of the notarization to remove.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been removed.
 	 */
 	remove(id: string, controllerIdentity?: string): Promise<void>;
 
@@ -39,7 +39,7 @@ export interface INotarizationComponent extends IComponent {
 	 * Update an existing notarization.
 	 * @param notarization The notarization to update.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been updated.
 	 */
 	update(notarization: INotarization, controllerIdentity?: string): Promise<void>;
 
@@ -48,7 +48,7 @@ export interface INotarizationComponent extends IComponent {
 	 * @param id The id of the notarization to transfer.
 	 * @param recipientAddress The recipient address.
 	 * @param controllerIdentity The identity to perform the notarization operation with.
-	 * @returns Nothing.
+	 * @returns A promise that resolves when the notarization has been transferred.
 	 */
 	transfer(id: string, recipientAddress: string, controllerIdentity?: string): Promise<void>;
 }

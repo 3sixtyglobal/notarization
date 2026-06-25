@@ -26,6 +26,10 @@ The constructor options.
 
 `NotarizationService`
 
+#### Throws
+
+If no notarization connectors are registered.
+
 ## Properties
 
 ### CLASS\_NAME {#class_name}
@@ -142,7 +146,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been removed.
 
 #### Implementation of
 
@@ -174,7 +178,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been updated.
 
 #### Implementation of
 
@@ -212,7 +216,7 @@ The identity to perform the notarization operation with.
 
 `Promise`\<`void`\>
 
-Nothing.
+A promise that resolves when the notarization has been transferred.
 
 #### Implementation of
 

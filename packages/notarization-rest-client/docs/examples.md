@@ -45,7 +45,7 @@ await client.update({
 
 await client.transfer(
   'notarization:urn:notarization:entity-storage:abc123',
-  'did:example:recipient'
+  '0x1234567890abcdef1234567890abcdef12345678'
 );
 
 await client.remove('notarization:urn:notarization:entity-storage:abc123');

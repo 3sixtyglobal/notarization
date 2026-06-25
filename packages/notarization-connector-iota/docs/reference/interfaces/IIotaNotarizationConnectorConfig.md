@@ -8,6 +8,20 @@ Configuration for the IOTA Notarization Connector.
 
 ## Properties
 
+### accountAddressIndex? {#accountaddressindex}
+
+> `optional` **accountAddressIndex?**: `number`
+
+The account address index to use when performing notarization operations.
+
+#### Default
+
+```ts
+0
+```
+
+***
+
 ### walletAddressIndex? {#walletaddressindex}
 
 > `optional` **walletAddressIndex?**: `number`

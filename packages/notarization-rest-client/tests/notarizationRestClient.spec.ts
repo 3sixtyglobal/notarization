@@ -1,9 +1,8 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ICreatedResponse, INoContentResponse } from "@twin.org/api-models";
+import { Converter } from "@twin.org/core";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import { HeaderTypes } from "@twin.org/web";
-import { beforeEach, describe, expect, test, vi } from "vitest";
 import { NotarizationRestClient } from "../src/notarizationRestClient.js";
 
 describe("NotarizationRestClient", () => {
@@ -21,7 +20,7 @@ describe("NotarizationRestClient", () => {
 		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
 			statusCode: 201,
 			headers: { [HeaderTypes.Location]: "notarization:default:abc123" }
-		} as ICreatedResponse);
+		});
 
 		const id = await client.create({ mode: "dynamic", data: new Uint8Array([1, 2, 3]) });
 
@@ -39,7 +38,7 @@ describe("NotarizationRestClient", () => {
 		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
 			statusCode: 201,
 			headers: { [HeaderTypes.Location]: "notarization:custom:xyz456" }
-		} as ICreatedResponse);
+		});
 
 		const id = await client.create({ mode: "dynamic", data: new Uint8Array() }, "custom-namespace");
 
@@ -61,7 +60,7 @@ describe("NotarizationRestClient", () => {
 		vi.spyOn(client, "fetch").mockResolvedValue({
 			statusCode: 201,
 			headers: {}
-		} as ICreatedResponse);
+		});
 
 		await expect(
 			client.create({ mode: "dynamic", data: new Uint8Array([1, 2, 3]) })
@@ -73,7 +72,7 @@ describe("NotarizationRestClient", () => {
 			id: "notarization:default:abc123",
 			mode: NotarizationMode.Dynamic,
 			dateCreated: "2026-01-01T00:00:00.000Z",
-			data: new Uint8Array()
+			data: Converter.bytesToBase64(new Uint8Array())
 		};
 		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
 			body: mockNotarization
@@ -86,7 +85,10 @@ describe("NotarizationRestClient", () => {
 			"GET",
 			expect.objectContaining({ pathParams: { id: "notarization:default:abc123" } })
 		);
-		expect(result).toEqual(mockNotarization);
+		expect(result).toEqual({
+			...mockNotarization,
+			data: Converter.base64ToBytes(mockNotarization.data)
+		});
 	});
 
 	test("get throws when id is empty", async () => {
@@ -94,9 +96,7 @@ describe("NotarizationRestClient", () => {
 	});
 
 	test("remove sends DELETE with correct path params", async () => {
-		const fetchSpy = vi
-			.spyOn(client, "fetch")
-			.mockResolvedValue({ statusCode: 204 } as INoContentResponse);
+		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
 
 		await client.remove("notarization:default:abc123");
 
@@ -112,9 +112,7 @@ describe("NotarizationRestClient", () => {
 	});
 
 	test("update sends PUT with id in path and body", async () => {
-		const fetchSpy = vi
-			.spyOn(client, "fetch")
-			.mockResolvedValue({ statusCode: 204 } as INoContentResponse);
+		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
 
 		const notarization = {
 			id: "notarization:default:abc123",
@@ -130,7 +128,10 @@ describe("NotarizationRestClient", () => {
 			"PUT",
 			expect.objectContaining({
 				pathParams: { id: "notarization:default:abc123" },
-				body: notarization
+				body: {
+					...notarization,
+					data: Converter.bytesToBase64(notarization.data)
+				}
 			})
 		);
 	});
@@ -140,9 +141,7 @@ describe("NotarizationRestClient", () => {
 	});
 
 	test("transfer sends POST with recipientAddress in body", async () => {
-		const fetchSpy = vi
-			.spyOn(client, "fetch")
-			.mockResolvedValue({ statusCode: 204 } as INoContentResponse);
+		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
 
 		await client.transfer("notarization:default:abc123", "recipient-address-1");
 

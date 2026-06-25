@@ -8,13 +8,20 @@
 			"creationFailedOutput": "Failed to parse the created notarization from transaction output.",
 			"deleteLockActive": "Deletion is currently locked for this notarization.",
 			"getFailed": "Failed to get the notarization.",
-			"invalidDate": "The value \"{{value}}\" is not a valid ISO date-time.",
-			"namespaceMismatch": "The notarization id \"{{id}}\" is not in the expected namespace \"{{namespace}}\".",
+			"invalidDate": "The value \"{value}\" is not a valid ISO date-time.",
+			"namespaceMismatch": "The notarization id \"{id}\" is not in the expected namespace \"{namespace}\".",
 			"removeFailed": "Failed to remove the notarization.",
 			"transferFailed": "Failed to transfer the notarization.",
 			"transferLockActive": "Transfer is currently locked for this notarization.",
 			"updateFailed": "Failed to update the notarization.",
-			"updateLockActive": "Updates are currently locked for this notarization."
+			"updateLockActive": "Updates are currently locked for this notarization.",
+			"updateWhileLocked": "Cannot update state while notarization is locked for updates",
+			"destroyWhileLocked": "Cannot destroy notarization while locked for deletion",
+			"lockTimeNotSatisfied": "The lock time is not satisfied",
+			"untilDestroyedLockNotAllowed": "Delete lock cannot be UntilDestroyed",
+			"dynamicNotarizationInvariants": "Invariants for dynamic notarization are broken by the specified",
+			"lockedNotarizationInvariants": "Invariants for locked notarization are broken by the specified",
+			"unknownAbortCode": "An unknown abort code was returned: \"{abortCode}\""
 		}
 	}
 }

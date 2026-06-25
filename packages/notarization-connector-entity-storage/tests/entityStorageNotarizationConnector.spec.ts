@@ -8,8 +8,8 @@ import { EntityStorageNotarizationConnector } from "../src/entityStorageNotariza
 const TEST_DATA = Converter.utf8ToBytes("notarization-test-data");
 
 describe("EntityStorageNotarizationConnector", () => {
-	beforeEach(() => {
-		notarizationStore.getStore().length = 0;
+	beforeEach(async () => {
+		await notarizationStore.empty();
 	});
 
 	test("Can create the service", async () => {
@@ -144,8 +144,8 @@ describe("EntityStorageNotarizationConnector", () => {
 			const notarizationId = result.split(":").at(-1);
 			expect(notarizationId).toBeDefined();
 
-			expect(notarizationStore.getStore().length).toBe(1);
-			const storedNotarization = notarizationStore.getStore()[0];
+			expect((await notarizationStore.getStore()).length).toBe(1);
+			const storedNotarization = (await notarizationStore.getStore())[0];
 
 			expect(storedNotarization).toEqual({
 				id: notarizationId,
@@ -180,8 +180,8 @@ describe("EntityStorageNotarizationConnector", () => {
 			const notarizationId = result.split(":").at(-1);
 			expect(notarizationId).toBeDefined();
 
-			expect(notarizationStore.getStore().length).toBe(1);
-			const storedNotarization = notarizationStore.getStore()[0];
+			expect((await notarizationStore.getStore()).length).toBe(1);
+			const storedNotarization = (await notarizationStore.getStore())[0];
 
 			expect(storedNotarization).toEqual({
 				id: notarizationId,
@@ -216,8 +216,8 @@ describe("EntityStorageNotarizationConnector", () => {
 			const notarizationId = result.split(":").at(-1);
 			expect(notarizationId).toBeDefined();
 
-			expect(notarizationStore.getStore().length).toBe(1);
-			const storedNotarization = notarizationStore.getStore()[0];
+			expect((await notarizationStore.getStore()).length).toBe(1);
+			const storedNotarization = (await notarizationStore.getStore())[0];
 
 			expect(storedNotarization).toEqual({
 				id: notarizationId,
@@ -247,8 +247,8 @@ describe("EntityStorageNotarizationConnector", () => {
 			const notarizationId = result.split(":").at(-1);
 			expect(notarizationId).toBeDefined();
 
-			expect(notarizationStore.getStore().length).toBe(1);
-			const storedNotarization = notarizationStore.getStore()[0];
+			expect((await notarizationStore.getStore()).length).toBe(1);
+			const storedNotarization = (await notarizationStore.getStore())[0];
 
 			expect(storedNotarization).toEqual({
 				id: notarizationId,
@@ -278,8 +278,8 @@ describe("EntityStorageNotarizationConnector", () => {
 			const notarizationId = result.split(":").at(-1);
 			expect(notarizationId).toBeDefined();
 
-			expect(notarizationStore.getStore().length).toBe(1);
-			const storedNotarization = notarizationStore.getStore()[0];
+			expect((await notarizationStore.getStore()).length).toBe(1);
+			const storedNotarization = (await notarizationStore.getStore())[0];
 
 			expect(storedNotarization).toEqual({
 				id: notarizationId,
@@ -347,7 +347,7 @@ describe("EntityStorageNotarizationConnector", () => {
 			});
 
 			await expect(connector.remove("someone-else", id)).rejects.toThrow("removeFailed");
-			expect(notarizationStore.getStore().length).toBe(1);
+			expect((await notarizationStore.getStore()).length).toBe(1);
 		});
 
 		test("Should remove notarization when controller identity matches", async () => {
@@ -359,11 +359,11 @@ describe("EntityStorageNotarizationConnector", () => {
 				description: "remove success"
 			});
 
-			expect(notarizationStore.getStore().length).toBe(1);
+			expect((await notarizationStore.getStore()).length).toBe(1);
 
 			await connector.remove(TEST_NODE_IDENTITY, id);
 
-			expect(notarizationStore.getStore().length).toBe(0);
+			expect((await notarizationStore.getStore()).length).toBe(0);
 		});
 
 		test("Should remove dynamic notarization even when transfer lock date is in the future", async () => {
@@ -378,7 +378,7 @@ describe("EntityStorageNotarizationConnector", () => {
 			});
 
 			await connector.remove(TEST_NODE_IDENTITY, id);
-			expect(notarizationStore.getStore().length).toBe(0);
+			expect((await notarizationStore.getStore()).length).toBe(0);
 		});
 	});
 
@@ -527,7 +527,7 @@ describe("EntityStorageNotarizationConnector", () => {
 				"transferFailed"
 			);
 
-			expect(notarizationStore.getStore()[0]?.owner).toBe(TEST_NODE_IDENTITY);
+			expect((await notarizationStore.getStore())[0]?.owner).toBe(TEST_NODE_IDENTITY);
 		});
 
 		test("Should update owner when transfer succeeds", async () => {
@@ -543,8 +543,8 @@ describe("EntityStorageNotarizationConnector", () => {
 
 			await connector.transfer(TEST_NODE_IDENTITY, id, recipientAddress);
 
-			expect(notarizationStore.getStore()[0]?.owner).toBe(recipientAddress);
-			expect(notarizationStore.getStore()[0]?.controllerIdentity).toBe(TEST_NODE_IDENTITY);
+			expect((await notarizationStore.getStore())[0]?.owner).toBe(recipientAddress);
+			expect((await notarizationStore.getStore())[0]?.controllerIdentity).toBe(TEST_NODE_IDENTITY);
 		});
 
 		test("Should throw transferFailed when notarization is missing", async () => {
@@ -570,7 +570,7 @@ describe("EntityStorageNotarizationConnector", () => {
 				"transferFailed"
 			);
 
-			expect(notarizationStore.getStore()[0]?.owner).toBe(TEST_NODE_IDENTITY);
+			expect((await notarizationStore.getStore())[0]?.owner).toBe(TEST_NODE_IDENTITY);
 		});
 
 		test("Should throw transferFailed when transfer lock date is in the future", async () => {
@@ -588,7 +588,7 @@ describe("EntityStorageNotarizationConnector", () => {
 				"transferFailed"
 			);
 
-			expect(notarizationStore.getStore()[0]?.owner).toBe(TEST_NODE_IDENTITY);
+			expect((await notarizationStore.getStore())[0]?.owner).toBe(TEST_NODE_IDENTITY);
 		});
 	});
 });
