@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.0...notarization-rest-client-v0.9.0) (2026-06-25)
+
+
+### Features
+
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* release to production ([#20](https://github.com/iotaledger/twin-notarization/issues/20)) ([3ccd338](https://github.com/iotaledger/twin-notarization/commit/3ccd338824721a3925c5000c859c8a2c5331286c))
+
 ## [0.9.0-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.0-next.0...notarization-rest-client-v0.9.0-next.1) (2026-06-23)
 
 
