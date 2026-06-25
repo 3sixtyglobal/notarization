@@ -180,8 +180,8 @@ runs:
           }
         done
 
-    # Validate that the version changes do not break the build; tests are skipped because
-    # test-environment setup is the responsibility of the calling workflow.
+    # Validate that the version changes do not break the build; tests are skipped
+    # as we are only changing version numbers.
     - name: Build Packages
       if: ${{ steps.check-changes.outputs.has_changes == 'true' }}
       shell: bash
@@ -238,11 +238,6 @@ runs:
           gpg --batch --yes --delete-secret-keys "$FINGERPRINT" || true
           gpg --batch --yes --delete-keys "$FINGERPRINT" || true
         fi
-
-    # Always teardown the environment, necessary to cleanup self-hosted runners.
-    - name: Teardown Test Environment
-      if: always()
-      uses: ./.github/workflows/teardown-test-env
 
     - name: Cleanup target worktree
       if: always()
