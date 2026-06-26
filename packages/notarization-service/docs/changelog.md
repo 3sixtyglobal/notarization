@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.9.1-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.1-next.0...notarization-service-v0.9.1-next.1) (2026-06-26)
+
+
+### Features
+
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* typescript 6 update ([93ebcba](https://github.com/iotaledger/twin-notarization/commit/93ebcbaa8bd86caf81fcbac838aa87ef9c0e4da8))
+
+
+### Bug Fixes
+
+* rest payload data as base64 ([#7](https://github.com/iotaledger/twin-notarization/issues/7)) ([f8ac0d9](https://github.com/iotaledger/twin-notarization/commit/f8ac0d939bdf3351061464182b1b2f38e8fe46fc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.1-next.0 to 0.9.1-next.1
+  * devDependencies
+    * @twin.org/notarization-connector-entity-storage bumped from 0.9.1-next.0 to 0.9.1-next.1
+
 ## [0.9.0](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.0...notarization-service-v0.9.0) (2026-06-25)
 
 
