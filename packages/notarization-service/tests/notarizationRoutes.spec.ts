@@ -137,7 +137,7 @@ describe("notarizationRoutes", () => {
 			);
 
 			expect(response.statusCode).toBe(201);
-			expect(response.headers?.location).toBe(NOTARIZATION_ID);
+			expect(response.headers?.location).toBe(encodeURIComponent(NOTARIZATION_ID));
 		});
 
 		test("creates a notarization with explicit namespace", async () => {
@@ -155,7 +155,7 @@ describe("notarizationRoutes", () => {
 			);
 
 			expect(response.statusCode).toBe(201);
-			expect(response.headers?.location).toBe(NOTARIZATION_ID);
+			expect(response.headers?.location).toBe(encodeURIComponent(NOTARIZATION_ID));
 		});
 
 		test("throws when request body is missing", async () => {
