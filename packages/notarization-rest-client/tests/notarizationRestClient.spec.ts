@@ -1,165 +1,267 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter } from "@twin.org/core";
+import { Converter, GuardError } from "@twin.org/core";
+import type { INotarization } from "@twin.org/notarization-models";
 import { NotarizationMode } from "@twin.org/notarization-models";
-import { HeaderTypes } from "@twin.org/web";
+import { HttpMethod } from "@twin.org/web";
 import { NotarizationRestClient } from "../src/notarizationRestClient.js";
+import {
+	createdResponse,
+	jsonResponse,
+	noContentResponse,
+	setupFetchMock,
+	teardownFetchMock
+} from "./helpers/restClientTestHelpers.js";
+
+// OpenAPI spec: ../../notarization-service/docs/open-api/spec.json
+const ENDPOINT = "http://localhost:8080";
+const PREFIX = "notarization";
+
+const NOTARIZATION_ID = "notarization:default:abc123";
+const LOCATION = `${ENDPOINT}/${PREFIX}/${NOTARIZATION_ID}`;
+const RECIPIENT_ADDRESS = "iota1qp9x0q5ml8ytxzq4p7qkp3tsegzzpkqk5zwtnyr";
+
+const TEST_DATA_BYTES = new Uint8Array([1, 2, 3, 4, 5]);
+const TEST_DATA_BASE64 = Converter.bytesToBase64(TEST_DATA_BYTES);
+
+const TEST_NOTARIZATION_CREATE: Omit<INotarization, "id" | "dateCreated"> = {
+	mode: NotarizationMode.Dynamic,
+	data: TEST_DATA_BYTES,
+	description: "Test notarization"
+};
+
+const TEST_NOTARIZATION: INotarization = {
+	id: NOTARIZATION_ID,
+	mode: NotarizationMode.Dynamic,
+	dateCreated: "2026-01-01T00:00:00.000Z",
+	data: TEST_DATA_BYTES,
+	description: "Test notarization"
+};
+
+const TEST_NOTARIZATION_RESPONSE = {
+	id: NOTARIZATION_ID,
+	mode: NotarizationMode.Dynamic,
+	dateCreated: "2026-01-01T00:00:00.000Z",
+	data: TEST_DATA_BASE64,
+	description: "Test notarization"
+};
+
+const fetchMock = vi.fn();
 
 describe("NotarizationRestClient", () => {
 	let client: NotarizationRestClient;
 
 	beforeEach(() => {
-		client = new NotarizationRestClient({ endpoint: "http://localhost:8080" });
+		setupFetchMock(fetchMock);
+		client = new NotarizationRestClient({ endpoint: ENDPOINT });
 	});
 
-	test("Can create an instance", () => {
-		expect(client).toBeDefined();
+	afterEach(() => {
+		teardownFetchMock(fetchMock);
 	});
 
-	test("create sends POST and returns id from location header", async () => {
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
-			statusCode: 201,
-			headers: { [HeaderTypes.Location]: "notarization:default:abc123" }
+	describe("create", () => {
+		test("throws when notarization is undefined", async () => {
+			await expect(client.create(undefined as never)).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.objectUndefined"
+			});
 		});
 
-		const id = await client.create({ mode: "dynamic", data: new Uint8Array([1, 2, 3]) });
+		test("sends POST to /{prefix}", async () => {
+			fetchMock.mockResolvedValueOnce(createdResponse(LOCATION));
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/",
-			"POST",
-			expect.objectContaining({
-				body: expect.objectContaining({ mode: "dynamic" })
-			})
-		);
-		expect(id).toBe("notarization:default:abc123");
-	});
+			await client.create(TEST_NOTARIZATION_CREATE);
 
-	test("create includes namespace in request body when provided", async () => {
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
-			statusCode: 201,
-			headers: { [HeaderTypes.Location]: "notarization:custom:xyz456" }
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}`);
+			expect(options.method).toBe(HttpMethod.POST);
 		});
 
-		const id = await client.create({ mode: "dynamic", data: new Uint8Array() }, "custom-namespace");
+		test("sends mode in the request body", async () => {
+			fetchMock.mockResolvedValueOnce(createdResponse(LOCATION));
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/",
-			"POST",
-			expect.objectContaining({
-				body: expect.objectContaining({ namespace: "custom-namespace" })
-			})
-		);
-		expect(id).toBe("notarization:custom:xyz456");
-	});
+			await client.create(TEST_NOTARIZATION_CREATE);
 
-	test("create throws when notarization is undefined", async () => {
-		await expect(client.create(undefined as never)).rejects.toThrow();
-	});
-
-	test("create throws when location header is missing", async () => {
-		vi.spyOn(client, "fetch").mockResolvedValue({
-			statusCode: 201,
-			headers: {}
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.mode).toBe(NotarizationMode.Dynamic);
 		});
 
-		await expect(
-			client.create({ mode: "dynamic", data: new Uint8Array([1, 2, 3]) })
-		).rejects.toThrow();
-	});
+		test("converts data bytes to base64 in the request body", async () => {
+			fetchMock.mockResolvedValueOnce(createdResponse(LOCATION));
 
-	test("get sends GET and returns notarization", async () => {
-		const mockNotarization = {
-			id: "notarization:default:abc123",
-			mode: NotarizationMode.Dynamic,
-			dateCreated: "2026-01-01T00:00:00.000Z",
-			data: Converter.bytesToBase64(new Uint8Array())
-		};
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({
-			body: mockNotarization
+			await client.create(TEST_NOTARIZATION_CREATE);
+
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.data).toBe(TEST_DATA_BASE64);
 		});
 
-		const result = await client.get("notarization:default:abc123");
+		test("includes namespace in the request body when provided", async () => {
+			fetchMock.mockResolvedValueOnce(createdResponse(LOCATION));
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/:id",
-			"GET",
-			expect.objectContaining({ pathParams: { id: "notarization:default:abc123" } })
-		);
-		expect(result).toEqual({
-			...mockNotarization,
-			data: Converter.base64ToBytes(mockNotarization.data)
+			await client.create(TEST_NOTARIZATION_CREATE, "custom-namespace");
+
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.namespace).toBe("custom-namespace");
+		});
+
+		test("returns the Location header value as the notarization id", async () => {
+			fetchMock.mockResolvedValueOnce(createdResponse(LOCATION));
+
+			const id = await client.create(TEST_NOTARIZATION_CREATE);
+
+			expect(id).toBe(LOCATION);
 		});
 	});
 
-	test("get throws when id is empty", async () => {
-		await expect(client.get("")).rejects.toThrow();
+	describe("get", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.get("")).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
+
+		test("sends GET to /{prefix}/:id", async () => {
+			fetchMock.mockResolvedValueOnce(jsonResponse(TEST_NOTARIZATION_RESPONSE));
+
+			await client.get(NOTARIZATION_ID);
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/${NOTARIZATION_ID}`);
+			expect(options.method).toBe(HttpMethod.GET);
+		});
+
+		test("returns notarization with data decoded from base64", async () => {
+			fetchMock.mockResolvedValueOnce(jsonResponse(TEST_NOTARIZATION_RESPONSE));
+
+			const result = await client.get(NOTARIZATION_ID);
+
+			expect(result.id).toBe(NOTARIZATION_ID);
+			expect(result.mode).toBe(NotarizationMode.Dynamic);
+			expect(result.data).toEqual(TEST_DATA_BYTES);
+		});
 	});
 
-	test("remove sends DELETE with correct path params", async () => {
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
+	describe("remove", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.remove("")).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
 
-		await client.remove("notarization:default:abc123");
+		test("sends DELETE to /{prefix}/:id", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/:id",
-			"DELETE",
-			expect.objectContaining({ pathParams: { id: "notarization:default:abc123" } })
-		);
+			await client.remove(NOTARIZATION_ID);
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/${NOTARIZATION_ID}`);
+			expect(options.method).toBe(HttpMethod.DELETE);
+		});
+
+		test("resolves without a return value", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			const result = await client.remove(NOTARIZATION_ID);
+
+			expect(result).toBeUndefined();
+		});
 	});
 
-	test("remove throws when id is empty", async () => {
-		await expect(client.remove("")).rejects.toThrow();
+	describe("update", () => {
+		test("throws when notarization is undefined", async () => {
+			await expect(client.update(undefined as never)).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.objectUndefined"
+			});
+		});
+
+		test("sends PUT to /{prefix}/:id", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.update(TEST_NOTARIZATION);
+
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/${NOTARIZATION_ID}`);
+			expect(options.method).toBe(HttpMethod.PUT);
+		});
+
+		test("sends notarization fields in the request body", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.update(TEST_NOTARIZATION);
+
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.id).toBe(NOTARIZATION_ID);
+			expect(body.mode).toBe(NotarizationMode.Dynamic);
+		});
+
+		test("converts data bytes to base64 in the request body", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			await client.update(TEST_NOTARIZATION);
+
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.data).toBe(TEST_DATA_BASE64);
+		});
+
+		test("resolves without a return value", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
+
+			const result = await client.update(TEST_NOTARIZATION);
+
+			expect(result).toBeUndefined();
+		});
 	});
 
-	test("update sends PUT with id in path and body", async () => {
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
+	describe("transfer", () => {
+		test("throws when id is empty", async () => {
+			await expect(client.transfer("", RECIPIENT_ADDRESS)).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
 
-		const notarization = {
-			id: "notarization:default:abc123",
-			mode: NotarizationMode.Dynamic,
-			dateCreated: "2026-01-01T00:00:00.000Z",
-			data: new Uint8Array()
-		};
+		test("throws when recipientAddress is empty", async () => {
+			await expect(client.transfer(NOTARIZATION_ID, "")).rejects.toMatchObject({
+				name: GuardError.CLASS_NAME,
+				message: "guard.stringEmpty"
+			});
+		});
 
-		await client.update(notarization);
+		test("sends POST to /{prefix}/:id/transfer", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/:id",
-			"PUT",
-			expect.objectContaining({
-				pathParams: { id: "notarization:default:abc123" },
-				body: {
-					...notarization,
-					data: Converter.bytesToBase64(notarization.data)
-				}
-			})
-		);
-	});
+			await client.transfer(NOTARIZATION_ID, RECIPIENT_ADDRESS);
 
-	test("update throws when notarization is undefined", async () => {
-		await expect(client.update(undefined as never)).rejects.toThrow();
-	});
+			const [url, options] = fetchMock.mock.calls[0];
+			expect(url).toBe(`${ENDPOINT}/${PREFIX}/${NOTARIZATION_ID}/transfer`);
+			expect(options.method).toBe(HttpMethod.POST);
+		});
 
-	test("transfer sends POST with recipientAddress in body", async () => {
-		const fetchSpy = vi.spyOn(client, "fetch").mockResolvedValue({ statusCode: 204 });
+		test("sends recipientAddress in the request body", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
 
-		await client.transfer("notarization:default:abc123", "recipient-address-1");
+			await client.transfer(NOTARIZATION_ID, RECIPIENT_ADDRESS);
 
-		expect(fetchSpy).toHaveBeenCalledWith(
-			"/:id/transfer",
-			"POST",
-			expect.objectContaining({
-				pathParams: { id: "notarization:default:abc123" },
-				body: { recipientAddress: "recipient-address-1" }
-			})
-		);
-	});
+			const [, options] = fetchMock.mock.calls[0];
+			const body = JSON.parse(options.body);
+			expect(body.recipientAddress).toBe(RECIPIENT_ADDRESS);
+		});
 
-	test("transfer throws when id is empty", async () => {
-		await expect(client.transfer("", "recipient-address-1")).rejects.toThrow();
-	});
+		test("resolves without a return value", async () => {
+			fetchMock.mockResolvedValueOnce(noContentResponse());
 
-	test("transfer throws when recipientAddress is empty", async () => {
-		await expect(client.transfer("notarization:default:abc123", "")).rejects.toThrow();
+			const result = await client.transfer(NOTARIZATION_ID, RECIPIENT_ADDRESS);
+
+			expect(result).toBeUndefined();
+		});
 	});
 });
