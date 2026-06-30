@@ -113,7 +113,7 @@ describe("NotarizationRestClient", () => {
 
 			const id = await client.create(TEST_NOTARIZATION_CREATE);
 
-			expect(id).toBe(LOCATION);
+			expect(id).toBe(NOTARIZATION_ID);
 		});
 	});
 
