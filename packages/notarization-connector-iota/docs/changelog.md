@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.9.1-next.2...notarization-connector-iota-v0.9.1-next.3) (2026-06-30)
+
+
+### Features
+
+* rest enhancements ([#26](https://github.com/iotaledger/twin-notarization/issues/26)) ([304139f](https://github.com/iotaledger/twin-notarization/commit/304139f2a116334db6793af90dc8a560dc59f3e6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.1-next.2 to 0.9.1-next.3
+
 ## [0.9.1-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.9.1-next.1...notarization-connector-iota-v0.9.1-next.2) (2026-06-29)
 
 

@@ -1,6 +1,6 @@
 # Function: notarizationCreate()
 
-> **notarizationCreate**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **notarizationCreate**(`httpRequestContext`, `componentName`, `request`, `baseRouteName`): `Promise`\<`ICreatedResponse`\>
 
 Perform the create notarization operation.
 
@@ -23,6 +23,12 @@ The name of the component to use in the routes.
 `INotarizationCreateRequest`
 
 The request.
+
+### baseRouteName
+
+`string`
+
+The base route name for the API.
 
 ## Returns
 
