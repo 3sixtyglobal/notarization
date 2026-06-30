@@ -17,6 +17,7 @@ import {
 	notarizationUpdate
 } from "../src/notarizationRoutes.js";
 
+const BASE_ROUTE = "/notarization";
 const COMPONENT_NAME = "test-notarization-component";
 const ORG_IDENTITY = "did:test:org-controller";
 const NOTARIZATION_ID = "notarization:default-connector:abc123";
@@ -133,11 +134,11 @@ describe("notarizationRoutes", () => {
 							data: Converter.bytesToBase64(new Uint8Array([1, 2, 3])),
 							description: "test"
 						}
-					})
+					}, BASE_ROUTE)
 			);
 
 			expect(response.statusCode).toBe(201);
-			expect(response.headers?.location).toBe(encodeURIComponent(NOTARIZATION_ID));
+			expect(response.headers?.location).toBe(`${BASE_ROUTE}/${encodeURIComponent(NOTARIZATION_ID)}`);
 		});
 
 		test("creates a notarization with explicit namespace", async () => {
@@ -151,18 +152,18 @@ describe("notarizationRoutes", () => {
 							data: Converter.bytesToBase64(new Uint8Array()),
 							namespace: "default-connector"
 						}
-					})
+					}, BASE_ROUTE)
 			);
 
 			expect(response.statusCode).toBe(201);
-			expect(response.headers?.location).toBe(encodeURIComponent(NOTARIZATION_ID));
+			expect(response.headers?.location).toBe(`${BASE_ROUTE}/${encodeURIComponent(NOTARIZATION_ID)}`);
 		});
 
 		test("throws when request body is missing", async () => {
 			registerMockComponent();
 			await expect(
 				ContextIdStore.run({ [ContextIdKeys.Organization]: ORG_IDENTITY }, async () =>
-					notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {} as never)
+					notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {} as never, BASE_ROUTE)
 				)
 			).rejects.toThrow();
 		});
@@ -172,7 +173,7 @@ describe("notarizationRoutes", () => {
 			await expect(
 				notarizationCreate(MOCK_CONTEXT, COMPONENT_NAME, {
 					body: { mode: "dynamic", data: Converter.bytesToBase64(new Uint8Array()) }
-				})
+				}, BASE_ROUTE)
 			).rejects.toThrow();
 		});
 	});
