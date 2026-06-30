@@ -70,7 +70,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 			}
 		);
 
-		return HttpHeaderHelper.extractId(response.headers);
+		return HttpHeaderHelper.extractId(response.headers, `${this.getPathPrefix()}/:id`);
 	}
 
 	/**
