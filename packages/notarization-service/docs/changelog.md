@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.9.1-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.1-next.2...notarization-service-v0.9.1-next.3) (2026-06-30)
+
+
+### Features
+
+* enhanced rest testing ([c95754c](https://github.com/iotaledger/twin-notarization/commit/c95754cc1195b3906d799ffbc84960bd71913398))
+* rest enhancements ([480576e](https://github.com/iotaledger/twin-notarization/commit/480576e87b11f6eefbda464bc634d20cb4a54946))
+* rest enhancements ([#26](https://github.com/iotaledger/twin-notarization/issues/26)) ([304139f](https://github.com/iotaledger/twin-notarization/commit/304139f2a116334db6793af90dc8a560dc59f3e6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.1-next.2 to 0.9.1-next.3
+  * devDependencies
+    * @twin.org/notarization-connector-entity-storage bumped from 0.9.1-next.2 to 0.9.1-next.3
+
 ## [0.9.1-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.1-next.1...notarization-service-v0.9.1-next.2) (2026-06-29)
 
 
