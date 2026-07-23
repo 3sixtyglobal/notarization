@@ -130,31 +130,6 @@ const testAddresses2 = await Iota.getAddresses(
 export const TEST_ADDRESS_1 = testAddresses[0];
 export const TEST_ADDRESS_2 = testAddresses2[0];
 
-async function ensureFundsForAddress(identity: string, address: string): Promise<void> {
-	try {
-		const success = await Iota.ensureBalance(
-			TEST_IOTA_CONFIG,
-			TEST_FAUCET_ENDPOINT,
-			identity,
-			address,
-			MIN_BALANCE_REQUIRED,
-			30
-		);
-
-		if (!success) {
-			const currentBalance = await Iota.getBalance(TEST_IOTA_CONFIG, address);
-			console.warn(
-				`[setupTestEnv] Faucet/ensureBalance did not top up ${address}. Continuing with balance ${currentBalance}.`
-			);
-		}
-	} catch (error) {
-		console.warn(
-			`[setupTestEnv] Ignoring faucet error while funding ${address}. Continuing test setup.`,
-			error
-		);
-	}
-}
-
 export async function setupTestEnv(): Promise<void> {
 	await testFundGasStation();
 
@@ -168,6 +143,43 @@ export async function setupTestEnv(): Promise<void> {
 	);
 	await ensureFundsForAddress(TEST_USER_IDENTITY, TEST_ADDRESS_1);
 	await ensureFundsForAddress(TEST_USER_IDENTITY_2, TEST_ADDRESS_2);
+}
+
+/**
+ * Ensure an address has sufficient funds for testing.
+ * Only requests from faucet if current balance is below minimum required.
+ * @param identity The identity to use for wallet operations.
+ * @param address The address to ensure funds for.
+ * @returns Promise that resolves when funds are ensured.
+ */
+async function ensureFundsForAddress(identity: string, address: string): Promise<void> {
+	try {
+		// Use ensureBalance which will automatically request from faucet if needed
+		const success = await Iota.ensureBalance(
+			TEST_IOTA_CONFIG,
+			TEST_FAUCET_ENDPOINT,
+			identity,
+			address,
+			MIN_BALANCE_REQUIRED,
+			30
+		);
+
+		const currentBalance = await Iota.getBalance(TEST_IOTA_CONFIG, address);
+		console.debug(
+			`[ensureFundsForAddress] Address ${TEST_EXPLORER_URL}address/${address}?network=${TEST_NETWORK} has balance: ${currentBalance}`
+		);
+
+		if (!success) {
+			console.warn(
+				`Failed to ensure funds from faucet for address ${address}, requiredBalance: ${MIN_BALANCE_REQUIRED}, currentBalance: ${currentBalance}`
+			);
+		}
+	} catch (error) {
+		console.warn(
+			`[setupTestEnv] Ignoring faucet error while funding ${address}. Continuing test setup.`,
+			error
+		);
+	}
 }
 
 /**
