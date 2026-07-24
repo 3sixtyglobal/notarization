@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.4](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.1-next.3...notarization-rest-client-v0.9.1-next.4) (2026-07-24)
+
+
+### Features
+
+* rest enhancements ([dc80f22](https://github.com/iotaledger/twin-notarization/commit/dc80f22deb24603d0928a899b22617fc55ce40a5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.1-next.3 to 0.9.1-next.4
+
 ## [0.9.1-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.1-next.2...notarization-rest-client-v0.9.1-next.3) (2026-06-30)
 
 

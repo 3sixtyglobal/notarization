@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1-next.4](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.1-next.3...notarization-models-v0.9.1-next.4) (2026-07-24)
+
+
+### Miscellaneous Chores
+
+* **notarization-models:** Synchronize repo versions
+
 ## [0.9.1-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.1-next.2...notarization-models-v0.9.1-next.3) (2026-06-30)
 
 

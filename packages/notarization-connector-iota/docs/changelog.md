@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.1-next.4](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.9.1-next.3...notarization-connector-iota-v0.9.1-next.4) (2026-07-24)
+
+
+### Bug Fixes
+
+* sponsored notarization no longer requires sender-owned coins ([#31](https://github.com/iotaledger/twin-notarization/issues/31)) ([8df28c1](https://github.com/iotaledger/twin-notarization/commit/8df28c16529c739854c2576e8fa49fd5c1a5fec4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.1-next.3 to 0.9.1-next.4
+
 ## [0.9.1-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-connector-iota-v0.9.1-next.2...notarization-connector-iota-v0.9.1-next.3) (2026-06-30)
 
 

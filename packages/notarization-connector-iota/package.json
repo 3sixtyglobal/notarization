@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/notarization-connector-iota",
-	"version": "0.9.1-next.3",
+	"version": "0.9.1-next.4",
 	"description": "IOTA-backed notarization connector for network operations and on-ledger state.",
 	"repository": {
 		"type": "git",
@@ -34,7 +34,7 @@
 		"@twin.org/dlt-iota": "next",
 		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
-		"@twin.org/notarization-models": "0.9.1-next.3",
+		"@twin.org/notarization-models": "0.9.1-next.4",
 		"@twin.org/vault-models": "next"
 	},
 	"devDependencies": {
