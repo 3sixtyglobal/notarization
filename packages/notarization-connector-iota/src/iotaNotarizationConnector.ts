@@ -1,5 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { Transaction } from "@iota/iota-sdk/transactions";
 import {
 	NotarizationClient,
 	NotarizationClientReadOnly,
@@ -17,6 +18,7 @@ import { NotarizationMode } from "@twin.org/notarization-models";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizationConnectorConfig.js";
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
+import type { INotarizationTransactionBuilder } from "./models/INotarizationTransactionBuilder.js";
 
 /**
  * IOTA on-chain connector for notarization operations.
@@ -339,12 +341,12 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
 	 * Post a notarization transaction using the shared IOTA transaction flow.
 	 *
-	 * This builds the notarization transaction, posts it via Iota.prepareAndPostTransaction
-	 * (which internally handles gas station mode when configured).
+	 * In gas station mode the vendor builder executes the sponsored path directly, so the
+	 * sender needs no coins of its own; otherwise the transaction is built and posted via
+	 * Iota.prepareAndPostTransaction.
 	 *
 	 * @param controllerIdentity The identity performing the transaction.
 	 * @param transactionBuilder The transaction builder.
-	 * @param transactionBuilder.build A function that builds the transaction bytes and signers.
 	 * @param notarizationClient The notarization client.
 	 * @param dryRunLabel An optional label for dry run transactions when cost logging is enabled.
 	 * @returns The execution result.
@@ -352,12 +354,18 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 */
 	private async postTransaction(
 		controllerIdentity: string,
-		transactionBuilder: {
-			build: (client: NotarizationClient) => Promise<[Uint8Array, string[], unknown]>;
-		},
+		transactionBuilder: INotarizationTransactionBuilder,
 		notarizationClient: NotarizationClient,
 		dryRunLabel: string
 	): Promise<IIotaTransactionBlockResponse> {
+		if (Iota.isGasStationEnabled(this._config)) {
+			return this.postGasStationTransaction(
+				controllerIdentity,
+				transactionBuilder,
+				notarizationClient
+			);
+		}
+
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
 		const transaction = Iota.transactionFromBytes(txBytes);
 		const owner = await Iota.getAddress(
@@ -380,6 +388,56 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			{
 				dryRunLabel: this._config.enableCostLogging ? dryRunLabel : undefined
 			}
+		);
+
+		this.handleAbortCode(response);
+
+		return response;
+	}
+
+	/**
+	 * Post a notarization transaction sponsored by the gas station.
+	 *
+	 * The operation is built as a gas-free programmable transaction (no coin selection
+	 * against the sender), then posted through the shared sponsored flow which attaches
+	 * the station's gas; the sender therefore needs no funds of its own.
+	 *
+	 * @param controllerIdentity The identity performing the transaction.
+	 * @param transactionBuilder The transaction builder.
+	 * @param notarizationClient The notarization client.
+	 * @returns The execution result.
+	 * @internal
+	 */
+	private async postGasStationTransaction(
+		controllerIdentity: string,
+		transactionBuilder: INotarizationTransactionBuilder,
+		notarizationClient: NotarizationClient
+	): Promise<IIotaTransactionBlockResponse> {
+		const owner = await Iota.getAddress(
+			this._vaultConnector,
+			this._config,
+			controllerIdentity,
+			this._config.accountAddressIndex ?? 0,
+			this._config.walletAddressIndex ?? 0
+		);
+
+		const programmableTransactionBytes =
+			await transactionBuilder.transaction.buildProgrammableTransaction(notarizationClient);
+
+		// The builder returns the bare ProgrammableTransaction BCS, while fromKind expects the
+		// TransactionKind enum wrapper, so prepend its variant tag (0 = ProgrammableTransaction).
+		const kindBytes = new Uint8Array(programmableTransactionBytes.length + 1);
+		kindBytes.set(programmableTransactionBytes, 1);
+		const transaction = Transaction.fromKind(kindBytes);
+
+		const iotaClient = Iota.createClient(this._config);
+		const response = await Iota.prepareAndPostGasStationTransaction(
+			this._config,
+			this._vaultConnector,
+			controllerIdentity,
+			iotaClient,
+			owner,
+			transaction
 		);
 
 		this.handleAbortCode(response);

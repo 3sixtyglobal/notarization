@@ -8,3 +8,4 @@
 
 - [IIotaNotarizationConnectorConfig](interfaces/IIotaNotarizationConnectorConfig.md)
 - [IIotaNotarizationConnectorConstructorOptions](interfaces/IIotaNotarizationConnectorConstructorOptions.md)
+- [INotarizationTransactionBuilder](interfaces/INotarizationTransactionBuilder.md)
