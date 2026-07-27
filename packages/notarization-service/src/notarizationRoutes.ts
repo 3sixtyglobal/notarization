@@ -1,11 +1,14 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type {
-	ICreatedResponse,
-	IHttpRequestContext,
-	INoContentResponse,
-	IRestRoute,
-	ITag
+import {
+	HttpContextIdKeys,
+	HttpHeaderHelper,
+	HttpUrlHelper,
+	type ICreatedResponse,
+	type IHttpRequestContext,
+	type INoContentResponse,
+	type IRestRoute,
+	type ITag
 } from "@twin.org/api-models";
 import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
 import { Converter, ComponentFactory, Guards } from "@twin.org/core";
@@ -19,7 +22,7 @@ import type {
 	INotarizationTransferRequest,
 	INotarizationUpdateRequest
 } from "@twin.org/notarization-models";
-import { HeaderTypes, HttpStatusCode } from "@twin.org/web";
+import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
 
 /**
  * The source identifier used in guard error messages for notarization routes.
@@ -53,7 +56,7 @@ export function generateRestRoutesNotarization(
 		method: "POST",
 		path: `${baseRouteName}/`,
 		handler: async (httpRequestContext, request) =>
-			notarizationCreate(httpRequestContext, componentName, request),
+			notarizationCreate(httpRequestContext, componentName, request, baseRouteName),
 		requestType: {
 			type: nameof<INotarizationCreateRequest>(),
 			examples: [
@@ -255,12 +258,14 @@ export function generateRestRoutesNotarization(
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
+ * @param baseRouteName The base route name for the API.
  * @returns The response object with additional http response properties.
  */
 export async function notarizationCreate(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
-	request: INotarizationCreateRequest
+	request: INotarizationCreateRequest,
+	baseRouteName: string
 ): Promise<ICreatedResponse> {
 	Guards.object<INotarizationCreateRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<INotarizationCreateRequest["body"]>(
@@ -282,11 +287,19 @@ export async function notarizationCreate(
 		namespace,
 		contextIds[ContextIdKeys.Organization]
 	);
+
+	const publicOrigin = contextIds?.[HttpContextIdKeys.PublicOrigin];
+
+	const headers: IHttpHeaders = {};
+	HttpHeaderHelper.buildId(
+		headers,
+		result,
+		HttpUrlHelper.combineOriginPath(publicOrigin, `${baseRouteName}/:id`)
+	);
+
 	return {
 		statusCode: HttpStatusCode.created,
-		headers: {
-			[HeaderTypes.Location]: result
-		}
+		headers
 	};
 }
 

@@ -1,6 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { Urn } from "@twin.org/core";
+import { Bip39 } from "@twin.org/crypto";
 import { NotarizationMode } from "@twin.org/notarization-models";
 import {
 	TEST_ADDRESS_2,
@@ -12,6 +13,7 @@ import {
 	TEST_NETWORK,
 	TEST_USER_IDENTITY,
 	TEST_USER_IDENTITY_2,
+	TEST_VAULT_CONNECTOR,
 	setupTestEnv
 } from "./setupTestEnv.js";
 import { IotaNotarizationConnector } from "../src/iotaNotarizationConnector.js";
@@ -136,5 +138,30 @@ describe("IotaNotarizationConnector with Gas Station Sponsorship", () => {
 		expect(notarization.data).toEqual(TEST_DATA);
 
 		await connector.remove(TEST_USER_IDENTITY, id);
+	});
+
+	test("Can create notarization for a sender whose wallet holds no coins", async () => {
+		// The sponsored path must not depend on the sender owning coins: this identity's
+		// wallet is freshly generated and never funded.
+		const zeroBalanceIdentity = "test-notarization-zero-balance";
+		await TEST_VAULT_CONNECTOR.setSecret(
+			`${zeroBalanceIdentity}/${TEST_MNEMONIC_NAME}`,
+			Bip39.randomMnemonic()
+		);
+
+		const id = await connector.create(zeroBalanceIdentity, {
+			mode: NotarizationMode.Locked,
+			data: TEST_DATA,
+			description: "gas station zero balance",
+			immutableDescription: "immutable zero balance"
+		});
+
+		debugOnChainLocation(id);
+
+		const notarization = await connector.get(id);
+		expect(notarization.mode).toBe(NotarizationMode.Locked);
+		expect(notarization.data).toEqual(TEST_DATA);
+
+		await connector.remove(zeroBalanceIdentity, id);
 	});
 });

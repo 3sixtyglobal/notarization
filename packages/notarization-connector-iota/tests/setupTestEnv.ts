@@ -1,6 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
+import { requestIotaFromFaucetV0 } from "@iota/iota-sdk/faucet";
 import { Guards, Is } from "@twin.org/core";
 import { Bip39 } from "@twin.org/crypto";
 import { Iota } from "@twin.org/dlt-iota";
@@ -19,12 +20,11 @@ import dotenv from "dotenv";
 console.debug("Setting up IOTA notarization test environment from .env and .env.dev files");
 
 dotenv.config({
-	path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.dev")],
+	path: [path.join(__dirname, ".env.dev"), path.join(__dirname, ".env")],
 	quiet: true
 });
 
 Guards.stringValue("TestEnv", "TEST_NODE_ENDPOINT", process.env.TEST_NODE_ENDPOINT);
-Guards.stringValue("TestEnv", "TEST_FAUCET_ENDPOINT", process.env.TEST_FAUCET_ENDPOINT);
 Guards.stringValue("TestEnv", "TEST_COIN_TYPE", process.env.TEST_COIN_TYPE);
 Guards.stringValue("TestEnv", "TEST_EXPLORER_URL", process.env.TEST_EXPLORER_URL);
 Guards.stringValue("TestEnv", "TEST_NETWORK", process.env.TEST_NETWORK);
@@ -70,6 +70,7 @@ export const TEST_COIN_TYPE = Number.parseInt(process.env.TEST_COIN_TYPE, 10);
 export const TEST_GAS_STATION_URL = process.env.TEST_GAS_STATION_URL;
 export const TEST_GAS_STATION_AUTH_TOKEN = process.env.TEST_GAS_STATION_AUTH_TOKEN;
 export const TEST_EXPLORER_URL = process.env.TEST_EXPLORER_URL;
+export const TEST_GAS_STATION_ADDRESS = process.env.TEST_GAS_STATION_ADDRESS;
 
 const MIN_BALANCE_REQUIRED = 1000000000n;
 
@@ -129,32 +130,9 @@ const testAddresses2 = await Iota.getAddresses(
 export const TEST_ADDRESS_1 = testAddresses[0];
 export const TEST_ADDRESS_2 = testAddresses2[0];
 
-async function ensureFundsForAddress(identity: string, address: string): Promise<void> {
-	try {
-		const success = await Iota.ensureBalance(
-			TEST_IOTA_CONFIG,
-			TEST_FAUCET_ENDPOINT,
-			identity,
-			address,
-			MIN_BALANCE_REQUIRED,
-			30
-		);
-
-		if (!success) {
-			const currentBalance = await Iota.getBalance(TEST_IOTA_CONFIG, address);
-			console.warn(
-				`[setupTestEnv] Faucet/ensureBalance did not top up ${address}. Continuing with balance ${currentBalance}.`
-			);
-		}
-	} catch (error) {
-		console.warn(
-			`[setupTestEnv] Ignoring faucet error while funding ${address}. Continuing test setup.`,
-			error
-		);
-	}
-}
-
 export async function setupTestEnv(): Promise<void> {
+	await testFundGasStation();
+
 	console.debug(
 		"Test Address",
 		`${TEST_EXPLORER_URL}address/${TEST_ADDRESS_1}?network=${TEST_NETWORK}`
@@ -165,4 +143,83 @@ export async function setupTestEnv(): Promise<void> {
 	);
 	await ensureFundsForAddress(TEST_USER_IDENTITY, TEST_ADDRESS_1);
 	await ensureFundsForAddress(TEST_USER_IDENTITY_2, TEST_ADDRESS_2);
+}
+
+/**
+ * Ensure an address has sufficient funds for testing.
+ * Only requests from faucet if current balance is below minimum required.
+ * @param identity The identity to use for wallet operations.
+ * @param address The address to ensure funds for.
+ * @returns Promise that resolves when funds are ensured.
+ */
+async function ensureFundsForAddress(identity: string, address: string): Promise<void> {
+	try {
+		// Use ensureBalance which will automatically request from faucet if needed
+		const success = await Iota.ensureBalance(
+			TEST_IOTA_CONFIG,
+			TEST_FAUCET_ENDPOINT,
+			identity,
+			address,
+			MIN_BALANCE_REQUIRED,
+			30
+		);
+
+		const currentBalance = await Iota.getBalance(TEST_IOTA_CONFIG, address);
+		console.debug(
+			`[ensureFundsForAddress] Address ${TEST_EXPLORER_URL}address/${address}?network=${TEST_NETWORK} has balance: ${currentBalance}`
+		);
+
+		if (!success) {
+			console.warn(
+				`Failed to ensure funds from faucet for address ${address}, requiredBalance: ${MIN_BALANCE_REQUIRED}, currentBalance: ${currentBalance}`
+			);
+		}
+	} catch (error) {
+		console.warn(
+			`[setupTestEnv] Ignoring faucet error while funding ${address}. Continuing test setup.`,
+			error
+		);
+	}
+}
+
+/**
+ * Fund the gas station address from the faucet if the address is provided in the environment variables.
+ */
+async function testFundGasStation(): Promise<void> {
+	// Fund the gas station if its address is provided
+	if (Is.stringValue(TEST_GAS_STATION_ADDRESS) && Is.stringValue(TEST_FAUCET_ENDPOINT)) {
+		try {
+			const balance = await Iota.getBalance(
+				{
+					clientOptions: TEST_CLIENT_OPTIONS,
+					network: TEST_NETWORK
+				},
+				TEST_GAS_STATION_ADDRESS
+			);
+
+			if (balance < 2000000000) {
+				console.debug(
+					"Requesting IOTA from faucet to fund gas station address:",
+					`${TEST_EXPLORER_URL}address/${TEST_GAS_STATION_ADDRESS}?network=${TEST_NETWORK}`
+				);
+				const response = await requestIotaFromFaucetV0({
+					host: TEST_FAUCET_ENDPOINT,
+					recipient: TEST_GAS_STATION_ADDRESS
+				});
+				console.debug("Funded gas station address from faucet:", response);
+			}
+		} catch (error) {
+			console.error("Failed to request IOTA from faucet:", error);
+		}
+		console.debug(
+			"Gas station balance",
+			await Iota.getBalance(
+				{
+					clientOptions: TEST_CLIENT_OPTIONS,
+					network: TEST_NETWORK
+				},
+				TEST_GAS_STATION_ADDRESS
+			)
+		);
+	}
 }

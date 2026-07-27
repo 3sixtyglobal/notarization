@@ -1,10 +1,11 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
-import type {
-	IBaseRestClientConfig,
-	ICreatedResponse,
-	INoContentResponse
+import {
+	HttpHeaderHelper,
+	type IBaseRestClientConfig,
+	type ICreatedResponse,
+	type INoContentResponse
 } from "@twin.org/api-models";
 import { Converter, Guards } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
@@ -18,7 +19,7 @@ import type {
 	INotarizationTransferRequest,
 	INotarizationUpdateRequest
 } from "@twin.org/notarization-models";
-import { HeaderTypes } from "@twin.org/web";
+import { HttpMethod } from "@twin.org/web";
 
 /**
  * Client for performing notarization operations through to REST endpoints.
@@ -57,18 +58,19 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	): Promise<string> {
 		Guards.object(NotarizationRestClient.CLASS_NAME, nameof(notarization), notarization);
 
-		const response = await this.fetch<INotarizationCreateRequest, ICreatedResponse>("/", "POST", {
-			body: {
-				...notarization,
-				data: Converter.bytesToBase64(notarization.data),
-				namespace
+		const response = await this.fetch<INotarizationCreateRequest, ICreatedResponse>(
+			"/",
+			HttpMethod.POST,
+			{
+				body: {
+					...notarization,
+					data: Converter.bytesToBase64(notarization.data),
+					namespace
+				}
 			}
-		});
+		);
 
-		const notarizationId = response.headers[HeaderTypes.Location];
-		Guards.stringValue(NotarizationRestClient.CLASS_NAME, "location", notarizationId);
-
-		return notarizationId;
+		return HttpHeaderHelper.extractId(response.headers, `${this.getPathPrefix()}/:id`);
 	}
 
 	/**
@@ -80,7 +82,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);
 		const response = await this.fetch<INotarizationGetRequest, INotarizationGetResponse>(
 			"/:id",
-			"GET",
+			HttpMethod.GET,
 			{
 				pathParams: { id }
 			}
@@ -100,7 +102,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	public async remove(id: string): Promise<void> {
 		Guards.stringValue(NotarizationRestClient.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<INotarizationRemoveRequest, INoContentResponse>("/:id", "DELETE", {
+		await this.fetch<INotarizationRemoveRequest, INoContentResponse>("/:id", HttpMethod.DELETE, {
 			pathParams: { id }
 		});
 	}
@@ -113,7 +115,7 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 	public async update(notarization: INotarization): Promise<void> {
 		Guards.object(NotarizationRestClient.CLASS_NAME, nameof(notarization), notarization);
 
-		await this.fetch<INotarizationUpdateRequest, INoContentResponse>("/:id", "PUT", {
+		await this.fetch<INotarizationUpdateRequest, INoContentResponse>("/:id", HttpMethod.PUT, {
 			pathParams: { id: notarization.id },
 			body: {
 				...notarization,
@@ -136,9 +138,13 @@ export class NotarizationRestClient extends BaseRestClient implements INotarizat
 			recipientAddress
 		);
 
-		await this.fetch<INotarizationTransferRequest, INoContentResponse>("/:id/transfer", "POST", {
-			pathParams: { id },
-			body: { recipientAddress }
-		});
+		await this.fetch<INotarizationTransferRequest, INoContentResponse>(
+			"/:id/transfer",
+			HttpMethod.POST,
+			{
+				pathParams: { id },
+				body: { recipientAddress }
+			}
+		);
 	}
 }

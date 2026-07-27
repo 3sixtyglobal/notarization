@@ -3,3 +3,4 @@
 export * from "./iotaNotarizationConnector.js";
 export * from "./models/IIotaNotarizationConnectorConfig.js";
 export * from "./models/IIotaNotarizationConnectorConstructorOptions.js";
+export * from "./models/INotarizationTransactionBuilder.js";
