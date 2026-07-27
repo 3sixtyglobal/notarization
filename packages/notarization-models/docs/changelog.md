@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.1](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.1...notarization-models-v0.9.1) (2026-07-27)
+
+
+### Features
+
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* release to production ([#20](https://github.com/iotaledger/twin-notarization/issues/20)) ([3ccd338](https://github.com/iotaledger/twin-notarization/commit/3ccd338824721a3925c5000c859c8a2c5331286c))
+* release to production ([#36](https://github.com/iotaledger/twin-notarization/issues/36)) ([e05ccf6](https://github.com/iotaledger/twin-notarization/commit/e05ccf66cbb73edf170dc401656857137823a7a7))
+
 ## [0.9.1-next.4](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.1-next.3...notarization-models-v0.9.1-next.4) (2026-07-24)
 
 
