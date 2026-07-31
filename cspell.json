@@ -24,14 +24,15 @@
 		"abbrev",
 		"autorelease",
 		"bech",
-		"Faucet",
-		"TWIN",
-		"nameof",
-		"Stiftung",
-		"utxo",
 		"devnet",
+		"Faucet",
+		"hotfixes",
+		"nameof",
+		"notarizations",
 		"Stdlib",
-		"notarizations"
+		"Stiftung",
+		"TWIN",
+		"utxo"
 	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
