@@ -1,13 +1,24 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { HealthCategory, HealthStatus, type IHealth } from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore, type IContextIds } from "@twin.org/context";
 import { Factory } from "@twin.org/core";
-import { EntityStorageNotarizationConnector } from "@twin.org/notarization-connector-entity-storage";
+import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
+import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
+import { nameof } from "@twin.org/nameof";
+import {
+	EntityStorageNotarizationConnector,
+	initSchema as initSchemaNotarization,
+	type Notarization
+} from "@twin.org/notarization-connector-entity-storage";
 import {
 	NotarizationConnectorFactory,
 	type INotarization,
 	type INotarizationConnector
 } from "@twin.org/notarization-models";
 import { NotarizationService } from "../src/notarizationService.js";
+
+const TEST_ORG_DID = "did:entity-storage:test-org";
 
 class TestNotarizationConnector implements INotarizationConnector {
 	public readonly createResult: string;
@@ -289,5 +300,57 @@ describe("NotarizationService", () => {
 				"did:test:controller-transfer"
 			)
 		).rejects.toThrow("transferFailed");
+	});
+});
+
+describe("NotarizationService health checks", () => {
+	beforeAll(() => {
+		initSchemaNotarization();
+	});
+
+	// Each test needs isolated storage because MemoryEntityStorageConnector uses
+	// SharedObjectBuffer keyed by storageKey, so instances sharing a key share data.
+	let healthTestIndex = 0;
+
+	beforeEach(() => {
+		healthTestIndex++;
+		const idx = healthTestIndex;
+
+		const freshNotarizationStorage = new MemoryEntityStorageConnector<Notarization>({
+			entitySchema: nameof<Notarization>(),
+			config: { storageKey: `notarization-health-${idx}` }
+		});
+
+		EntityStorageConnectorFactory.register("notarization", () => freshNotarizationStorage);
+		NotarizationConnectorFactory.register(
+			"notarization",
+			() => new EntityStorageNotarizationConnector()
+		);
+	});
+
+	test("healthApplication returns application ok after full lifecycle", async () => {
+		const service = new NotarizationService();
+
+		const contextIds: IContextIds = { [ContextIdKeys.Organization]: TEST_ORG_DID };
+
+		let results: IHealth[] = [];
+		await ContextIdStore.run(contextIds, async () => {
+			results = (await service.healthApplication(async () => {})) ?? [];
+		});
+
+		expect(results).toHaveLength(1);
+		expect(results[0].category).toEqual(HealthCategory.Application);
+		expect(results[0].status).toEqual(HealthStatus.Ok);
+	});
+
+	test("healthApplication returns empty array when no organization context", async () => {
+		const service = new NotarizationService();
+
+		let results: IHealth[] = [];
+		await ContextIdStore.run({}, async () => {
+			results = (await service.healthApplication(async () => {})) ?? [];
+		});
+
+		expect(results).toHaveLength(0);
 	});
 });

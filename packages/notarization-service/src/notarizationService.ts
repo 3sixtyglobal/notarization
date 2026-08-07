@@ -1,9 +1,18 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { GeneralError, Guards, Urn } from "@twin.org/core";
+import {
+	HealthCategory,
+	HealthStatus,
+	type HealthApplicationCallback,
+	type IHealth,
+	type IHealthProviderComponent
+} from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import { BaseError, GeneralError, Guards, Is, RandomHelper, Urn } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
 	NotarizationConnectorFactory,
+	NotarizationMode,
 	type INotarization,
 	type INotarizationComponent,
 	type INotarizationConnector
@@ -13,7 +22,7 @@ import type { INotarizationServiceConstructorOptions } from "./models/INotarizat
 /**
  * Service for notarization operations.
  */
-export class NotarizationService implements INotarizationComponent {
+export class NotarizationService implements INotarizationComponent, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
@@ -51,6 +60,58 @@ export class NotarizationService implements INotarizationComponent {
 	 */
 	public className(): string {
 		return NotarizationService.CLASS_NAME;
+	}
+
+	/**
+	 * Runs a full notarization lifecycle (create, get, remove) against the organisation identity
+	 * from the current context and returns the result directly.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The health status of the service.
+	 */
+	public async healthApplication(
+		callback: HealthApplicationCallback
+	): Promise<IHealth[] | undefined> {
+		const contextIds = (await ContextIdStore.getContextIds()) ?? {};
+		const orgId = contextIds[ContextIdKeys.Organization];
+
+		if (!Is.stringValue(orgId)) {
+			return [];
+		}
+
+		try {
+			const connector = NotarizationConnectorFactory.get<INotarizationConnector>(
+				this._defaultNamespace
+			);
+			const notarizationId = await connector.create(orgId, {
+				mode: NotarizationMode.Dynamic,
+				data: RandomHelper.generate(32)
+			});
+			const info = await connector.get(notarizationId);
+			await connector.remove(orgId, notarizationId);
+			return [
+				{
+					source: NotarizationService.CLASS_NAME,
+					category: HealthCategory.Application,
+					status: Is.object(info) ? HealthStatus.Ok : HealthStatus.Error,
+					description: "healthDescription",
+					message: Is.object(info) ? undefined : "getNotarizationFailed",
+					data: {
+						notarizationId
+					}
+				}
+			];
+		} catch (error) {
+			return [
+				{
+					source: NotarizationService.CLASS_NAME,
+					category: HealthCategory.Application,
+					status: HealthStatus.Error,
+					description: "healthDescription",
+					message: "getNotarizationFailed",
+					error: BaseError.fromError(error)
+				}
+			];
+		}
 	}
 
 	/**

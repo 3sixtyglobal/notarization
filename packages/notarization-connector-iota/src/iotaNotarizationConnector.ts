@@ -10,6 +10,7 @@ import {
 	type OnChainNotarization
 } from "@iota/notarization/node/index.js";
 import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import { AccountHelper } from "@twin.org/dlt-account";
 import { type IIotaTransactionBlockResponse, Iota } from "@twin.org/dlt-iota";
 import type { ILoggingComponent } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
@@ -368,9 +369,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 		const [txBytes] = await transactionBuilder.build(notarizationClient);
 		const transaction = Iota.transactionFromBytes(txBytes);
-		const owner = await Iota.getAddress(
-			this._vaultConnector,
+		const owner = await AccountHelper.getAddress(
 			this._config,
+			this._vaultConnector,
 			controllerIdentity,
 			this._config.accountAddressIndex ?? 0,
 			this._config.walletAddressIndex ?? 0
@@ -413,9 +414,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 		transactionBuilder: INotarizationTransactionBuilder,
 		notarizationClient: NotarizationClient
 	): Promise<IIotaTransactionBlockResponse> {
-		const owner = await Iota.getAddress(
-			this._vaultConnector,
+		const owner = await AccountHelper.getAddress(
 			this._config,
+			this._vaultConnector,
 			controllerIdentity,
 			this._config.accountAddressIndex ?? 0,
 			this._config.walletAddressIndex ?? 0
