@@ -5,6 +5,7 @@ Service for notarization operations.
 ## Implements
 
 - `INotarizationComponent`
+- `IHealthProviderComponent`
 
 ## Constructors
 
@@ -55,6 +56,33 @@ The class name of the component.
 #### Implementation of
 
 `INotarizationComponent.className`
+
+***
+
+### healthApplication() {#healthapplication}
+
+> **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
+
+Runs a full notarization lifecycle (create, get, remove) against the organisation identity
+from the current context and returns the result directly.
+
+#### Parameters
+
+##### callback
+
+`HealthApplicationCallback`
+
+The callback to invoke when a deferred health result is ready.
+
+#### Returns
+
+`Promise`\<`IHealth`[] \| `undefined`\>
+
+The health status of the service.
+
+#### Implementation of
+
+`IHealthProviderComponent.healthApplication`
 
 ***
 
