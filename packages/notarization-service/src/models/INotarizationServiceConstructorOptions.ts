@@ -7,6 +7,11 @@ import type { INotarizationServiceConfig } from "./INotarizationServiceConfig.js
  */
 export interface INotarizationServiceConstructorOptions {
 	/**
+	 * The component type for the optional telemetry component used for event metrics.
+	 */
+	telemetryComponentType?: string;
+
+	/**
 	 * The configuration for the service.
 	 */
 	config?: INotarizationServiceConfig;

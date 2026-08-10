@@ -8,15 +8,26 @@ import {
 	type IHealthProviderComponent
 } from "@twin.org/api-models";
 import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { BaseError, GeneralError, Guards, Is, RandomHelper, Urn } from "@twin.org/core";
+import {
+	BaseError,
+	ComponentFactory,
+	GeneralError,
+	Guards,
+	Is,
+	RandomHelper,
+	Urn
+} from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
 	NotarizationConnectorFactory,
+	NotarizationMetricIds,
+	NotarizationMetrics,
 	NotarizationMode,
 	type INotarization,
 	type INotarizationComponent,
 	type INotarizationConnector
 } from "@twin.org/notarization-models";
+import { MetricHelper, type ITelemetryComponent } from "@twin.org/telemetry-models";
 import type { INotarizationServiceConstructorOptions } from "./models/INotarizationServiceConstructorOptions.js";
 
 /**
@@ -41,6 +52,12 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 	private readonly _defaultNamespace: string;
 
 	/**
+	 * The optional telemetry component for recording metrics.
+	 * @internal
+	 */
+	private readonly _telemetryComponent?: ITelemetryComponent;
+
+	/**
 	 * Create a new instance of NotarizationService.
 	 * @param options The constructor options.
 	 * @throws {GeneralError} If no notarization connectors are registered.
@@ -52,6 +69,9 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 		}
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
+		this._telemetryComponent = ComponentFactory.getIfExists<ITelemetryComponent>(
+			options?.telemetryComponentType
+		);
 	}
 
 	/**
@@ -60,6 +80,16 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 	 */
 	public className(): string {
 		return NotarizationService.CLASS_NAME;
+	}
+
+	/**
+	 * Registers the notarization metrics with the telemetry component.
+	 */
+	public async start(): Promise<void> {
+		if (Is.undefined(this._telemetryComponent)) {
+			return;
+		}
+		await MetricHelper.createMetrics(this._telemetryComponent, NotarizationMetrics);
 	}
 
 	/**
@@ -144,6 +174,12 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 
 			const notarizationId = await notarizationConnector.create(controllerIdentity, notarization);
 
+			await MetricHelper.metricIncrement(
+				this._telemetryComponent,
+				NotarizationMetricIds.NotarizationsCreated,
+				{ mode: notarization.mode }
+			);
+
 			return notarizationId;
 		} catch (error) {
 			throw new GeneralError(NotarizationService.CLASS_NAME, "createFailed", undefined, error);
@@ -185,6 +221,11 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 		try {
 			const notarizationConnector = this.getConnector(id);
 			await notarizationConnector.remove(controllerIdentity, id);
+
+			await MetricHelper.metricIncrement(
+				this._telemetryComponent,
+				NotarizationMetricIds.NotarizationsRemoved
+			);
 		} catch (error) {
 			throw new GeneralError(NotarizationService.CLASS_NAME, "removeFailed", undefined, error);
 		}
@@ -208,6 +249,12 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 		try {
 			const notarizationConnector = this.getConnector(notarization.id);
 			await notarizationConnector.update(controllerIdentity, notarization);
+
+			await MetricHelper.metricIncrement(
+				this._telemetryComponent,
+				NotarizationMetricIds.NotarizationsUpdated,
+				{ mode: notarization.mode }
+			);
 		} catch (error) {
 			throw new GeneralError(NotarizationService.CLASS_NAME, "updateFailed", undefined, error);
 		}
@@ -236,6 +283,11 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 		try {
 			const notarizationConnector = this.getConnector(id);
 			await notarizationConnector.transfer(controllerIdentity, id, recipientAddress);
+
+			await MetricHelper.metricIncrement(
+				this._telemetryComponent,
+				NotarizationMetricIds.NotarizationsTransferred
+			);
 		} catch (error) {
 			throw new GeneralError(NotarizationService.CLASS_NAME, "transferFailed", undefined, error);
 		}

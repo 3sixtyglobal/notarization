@@ -10,4 +10,6 @@ export * from "./models/api/INotarizationUpdateRequest.js";
 export * from "./models/INotarization.js";
 export * from "./models/INotarizationComponent.js";
 export * from "./models/INotarizationConnector.js";
+export * from "./models/notarizationMetricIds.js";
+export * from "./models/notarizationMetrics.js";
 export * from "./models/notarizationMode.js";
