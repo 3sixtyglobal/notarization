@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.9.2-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.2-next.1...notarization-service-v0.9.2-next.2) (2026-08-10)
+
+
+### Features
+
+* telemetry ([#43](https://github.com/iotaledger/twin-notarization/issues/43)) ([d52c5d2](https://github.com/iotaledger/twin-notarization/commit/d52c5d27b3116670b17d031676fda71201ea954b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/notarization-models bumped from 0.9.2-next.1 to 0.9.2-next.2
+  * devDependencies
+    * @twin.org/notarization-connector-entity-storage bumped from 0.9.2-next.1 to 0.9.2-next.2
+
 ## [0.9.2-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.2-next.0...notarization-service-v0.9.2-next.1) (2026-08-07)
 
 
