@@ -59,6 +59,22 @@ The class name of the component.
 
 ***
 
+### start() {#start}
+
+> **start**(): `Promise`\<`void`\>
+
+Registers the notarization metrics with the telemetry component.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Implementation of
+
+`INotarizationComponent.start`
+
+***
+
 ### healthApplication() {#healthapplication}
 
 > **healthApplication**(`callback`): `Promise`\<`IHealth`[] \| `undefined`\>
