@@ -451,7 +451,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @param result The posted transaction result.
 	 * @param result.objectChanges The list of object changes from the transaction response.
 	 * @returns The created object id.
-	 * @throws {GeneralError} If the creation output is invalid or missing.
+	 * @throws GeneralError If the creation output is invalid or missing.
 	 * @internal
 	 */
 	private extractCreatedObjectId(result: { objectChanges?: unknown }): string {
@@ -477,7 +477,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Parse and validate a notarization id into the underlying object id.
 	 * @param id The notarization id.
 	 * @returns The object id.
-	 * @throws {GeneralError} If the namespace does not match.
+	 * @throws GeneralError If the namespace does not match.
 	 * @internal
 	 */
 	private objectIdFromUrn(id: string): string {
@@ -525,7 +525,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * Convert an ISO date-time string to unix seconds.
 	 * @param isoDateTime The ISO date-time.
 	 * @returns The unix timestamp in seconds.
-	 * @throws {GeneralError} If the date-time string is invalid.
+	 * @throws GeneralError If the date-time string is invalid.
 	 * @internal
 	 */
 	private toUnixSeconds(isoDateTime: string): number {
@@ -609,7 +609,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	/**
 	 * Handles an abort code from a transaction result if the transaction was aborted.
 	 * @param response The transaction result to handle the abort code from.
-	 * @throws {GeneralError} If the transaction was aborted with a known or unknown abort code.
+	 * @throws GeneralError If the transaction was aborted with a known or unknown abort code.
 	 * @internal
 	 */
 	private handleAbortCode(response: IIotaTransactionBlockResponse): void {

@@ -60,7 +60,7 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 	/**
 	 * Create a new instance of NotarizationService.
 	 * @param options The constructor options.
-	 * @throws {GeneralError} If no notarization connectors are registered.
+	 * @throws GeneralError If no notarization connectors are registered.
 	 */
 	constructor(options?: INotarizationServiceConstructorOptions) {
 		const names = NotarizationConnectorFactory.names();
@@ -297,7 +297,7 @@ export class NotarizationService implements INotarizationComponent, IHealthProvi
 	 * Get the connector from the id.
 	 * @param id The id of the notarization in urn format.
 	 * @returns The connector.
-	 * @throws {GeneralError} If the namespace does not match.
+	 * @throws GeneralError If the namespace does not match.
 	 * @internal
 	 */
 	private getConnector(id: string): INotarizationConnector {
