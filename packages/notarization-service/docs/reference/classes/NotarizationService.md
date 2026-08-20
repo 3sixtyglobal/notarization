@@ -29,7 +29,7 @@ The constructor options.
 
 #### Throws
 
-If no notarization connectors are registered.
+GeneralError If no notarization connectors are registered.
 
 ## Properties
 
