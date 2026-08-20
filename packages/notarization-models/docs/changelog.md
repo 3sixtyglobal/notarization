@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.2-next.2...notarization-models-v0.9.2-next.3) (2026-08-20)
+
+
+### Features
+
+* tracing ([#46](https://github.com/iotaledger/twin-notarization/issues/46)) ([260b242](https://github.com/iotaledger/twin-notarization/commit/260b242c99ce815bfa061d66913a733c35567c47))
+
 ## [0.9.2-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.2-next.1...notarization-models-v0.9.2-next.2) (2026-08-10)
 
 

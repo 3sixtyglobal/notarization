@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/notarization-models",
-	"version": "0.9.2-next.2",
+	"version": "0.9.2-next.3",
 	"description": "Shared notarization interfaces, request and response models, and connector contracts.",
 	"repository": {
 		"type": "git",
