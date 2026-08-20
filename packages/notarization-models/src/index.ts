@@ -13,3 +13,5 @@ export * from "./models/INotarizationConnector.js";
 export * from "./models/notarizationMetricIds.js";
 export * from "./models/notarizationMetrics.js";
 export * from "./models/notarizationMode.js";
+export * from "./models/notarizationSpanAttributes.js";
+export * from "./models/notarizationSpanNames.js";
