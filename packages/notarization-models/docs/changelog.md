@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.9.2-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.2-next.2...notarization-models-v0.9.2-next.3) (2026-08-20)
+
+
+### Features
+
+* tracing ([#46](https://github.com/iotaledger/twin-notarization/issues/46)) ([260b242](https://github.com/iotaledger/twin-notarization/commit/260b242c99ce815bfa061d66913a733c35567c47))
+
+## [0.9.2-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.2-next.1...notarization-models-v0.9.2-next.2) (2026-08-10)
+
+
+### Features
+
+* telemetry ([#43](https://github.com/iotaledger/twin-notarization/issues/43)) ([d52c5d2](https://github.com/iotaledger/twin-notarization/commit/d52c5d27b3116670b17d031676fda71201ea954b))
+
+## [0.9.2-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.2-next.0...notarization-models-v0.9.2-next.1) (2026-08-07)
+
+
+### Features
+
+* health provider ([#40](https://github.com/iotaledger/twin-notarization/issues/40)) ([de35c94](https://github.com/iotaledger/twin-notarization/commit/de35c946efa06a5ab639d72fd12aecd4f826d1f7))
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* typescript 6 update ([93ebcba](https://github.com/iotaledger/twin-notarization/commit/93ebcbaa8bd86caf81fcbac838aa87ef9c0e4da8))
+* update dependencies ([3d24bd2](https://github.com/iotaledger/twin-notarization/commit/3d24bd2bfbf0e8fac0c60b466fbfc18bf4b6fa56))
+
+
+### Bug Fixes
+
+* rest payload data as base64 ([#7](https://github.com/iotaledger/twin-notarization/issues/7)) ([f8ac0d9](https://github.com/iotaledger/twin-notarization/commit/f8ac0d939bdf3351061464182b1b2f38e8fe46fc))
+
 ## [0.9.1](https://github.com/iotaledger/twin-notarization/compare/notarization-models-v0.9.1...notarization-models-v0.9.1) (2026-07-27)
 
 

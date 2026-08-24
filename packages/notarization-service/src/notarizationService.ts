@@ -1,19 +1,42 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { GeneralError, Guards, Urn } from "@twin.org/core";
+import {
+	HealthCategory,
+	HealthStatus,
+	type HealthApplicationCallback,
+	type IHealth,
+	type IHealthProviderComponent
+} from "@twin.org/api-models";
+import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+import {
+	BaseError,
+	ComponentFactory,
+	GeneralError,
+	Guards,
+	Is,
+	RandomHelper,
+	Urn
+} from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import {
 	NotarizationConnectorFactory,
+	NotarizationMetricIds,
+	NotarizationMetrics,
+	NotarizationMode,
+	NotarizationSpanAttributes,
+	NotarizationSpanNames,
 	type INotarization,
 	type INotarizationComponent,
 	type INotarizationConnector
 } from "@twin.org/notarization-models";
+import { MetricHelper, type ITelemetryComponent } from "@twin.org/telemetry-models";
+import { TracingHelper, type ITracingComponent } from "@twin.org/tracing-models";
 import type { INotarizationServiceConstructorOptions } from "./models/INotarizationServiceConstructorOptions.js";
 
 /**
  * Service for notarization operations.
  */
-export class NotarizationService implements INotarizationComponent {
+export class NotarizationService implements INotarizationComponent, IHealthProviderComponent {
 	/**
 	 * Runtime name for the class.
 	 */
@@ -32,9 +55,21 @@ export class NotarizationService implements INotarizationComponent {
 	private readonly _defaultNamespace: string;
 
 	/**
+	 * The optional telemetry component for recording metrics.
+	 * @internal
+	 */
+	private readonly _telemetryComponent?: ITelemetryComponent;
+
+	/**
+	 * The optional tracing component for recording spans.
+	 * @internal
+	 */
+	private readonly _tracingComponent?: ITracingComponent;
+
+	/**
 	 * Create a new instance of NotarizationService.
 	 * @param options The constructor options.
-	 * @throws {GeneralError} If no notarization connectors are registered.
+	 * @throws GeneralError If no notarization connectors are registered.
 	 */
 	constructor(options?: INotarizationServiceConstructorOptions) {
 		const names = NotarizationConnectorFactory.names();
@@ -43,6 +78,12 @@ export class NotarizationService implements INotarizationComponent {
 		}
 
 		this._defaultNamespace = options?.config?.defaultNamespace ?? names[0];
+		this._telemetryComponent = ComponentFactory.getIfExists<ITelemetryComponent>(
+			options?.telemetryComponentType
+		);
+		this._tracingComponent = ComponentFactory.getIfExists<ITracingComponent>(
+			options?.tracingComponentType
+		);
 	}
 
 	/**
@@ -51,6 +92,68 @@ export class NotarizationService implements INotarizationComponent {
 	 */
 	public className(): string {
 		return NotarizationService.CLASS_NAME;
+	}
+
+	/**
+	 * Registers the notarization metrics with the telemetry component.
+	 */
+	public async start(): Promise<void> {
+		if (Is.undefined(this._telemetryComponent)) {
+			return;
+		}
+		await MetricHelper.createMetrics(this._telemetryComponent, NotarizationMetrics);
+	}
+
+	/**
+	 * Runs a full notarization lifecycle (create, get, remove) against the organisation identity
+	 * from the current context and returns the result directly.
+	 * @param callback The callback to invoke when a deferred health result is ready.
+	 * @returns The health status of the service.
+	 */
+	public async healthApplication(
+		callback: HealthApplicationCallback
+	): Promise<IHealth[] | undefined> {
+		const contextIds = (await ContextIdStore.getContextIds()) ?? {};
+		const orgId = contextIds[ContextIdKeys.Organization];
+
+		if (!Is.stringValue(orgId)) {
+			return [];
+		}
+
+		try {
+			const connector = NotarizationConnectorFactory.get<INotarizationConnector>(
+				this._defaultNamespace
+			);
+			const notarizationId = await connector.create(orgId, {
+				mode: NotarizationMode.Dynamic,
+				data: RandomHelper.generate(32)
+			});
+			const info = await connector.get(notarizationId);
+			await connector.remove(orgId, notarizationId);
+			return [
+				{
+					source: NotarizationService.CLASS_NAME,
+					category: HealthCategory.Application,
+					status: Is.object(info) ? HealthStatus.Ok : HealthStatus.Error,
+					description: "healthDescription",
+					message: Is.object(info) ? undefined : "getNotarizationFailed",
+					data: {
+						notarizationId
+					}
+				}
+			];
+		} catch (error) {
+			return [
+				{
+					source: NotarizationService.CLASS_NAME,
+					category: HealthCategory.Application,
+					status: HealthStatus.Error,
+					description: "healthDescription",
+					message: "getNotarizationFailed",
+					error: BaseError.fromError(error)
+				}
+			];
+		}
 	}
 
 	/**
@@ -75,18 +178,34 @@ export class NotarizationService implements INotarizationComponent {
 			controllerIdentity
 		);
 
-		try {
-			const connectorNamespace = namespace ?? this._defaultNamespace;
+		return TracingHelper.withSpan(
+			this._tracingComponent,
+			NotarizationSpanNames.Create,
+			{ attributes: { [NotarizationSpanAttributes.Mode]: notarization.mode } },
+			async () => {
+				try {
+					const connectorNamespace = namespace ?? this._defaultNamespace;
 
-			const notarizationConnector =
-				NotarizationConnectorFactory.get<INotarizationConnector>(connectorNamespace);
+					const notarizationConnector =
+						NotarizationConnectorFactory.get<INotarizationConnector>(connectorNamespace);
 
-			const notarizationId = await notarizationConnector.create(controllerIdentity, notarization);
+					const notarizationId = await notarizationConnector.create(
+						controllerIdentity,
+						notarization
+					);
 
-			return notarizationId;
-		} catch (error) {
-			throw new GeneralError(NotarizationService.CLASS_NAME, "createFailed", undefined, error);
-		}
+					await MetricHelper.metricIncrement(
+						this._telemetryComponent,
+						NotarizationMetricIds.NotarizationsCreated,
+						{ mode: notarization.mode }
+					);
+
+					return notarizationId;
+				} catch (error) {
+					throw new GeneralError(NotarizationService.CLASS_NAME, "createFailed", undefined, error);
+				}
+			}
+		);
 	}
 
 	/**
@@ -97,14 +216,21 @@ export class NotarizationService implements INotarizationComponent {
 	public async get(id: string): Promise<INotarization> {
 		Urn.guard(NotarizationService.CLASS_NAME, nameof(id), id);
 
-		try {
-			const notarizationConnector = this.getConnector(id);
-			const result = await notarizationConnector.get(id);
+		return TracingHelper.withSpan(
+			this._tracingComponent,
+			NotarizationSpanNames.Get,
+			{ attributes: { [NotarizationSpanAttributes.Id]: id } },
+			async () => {
+				try {
+					const notarizationConnector = this.getConnector(id);
+					const result = await notarizationConnector.get(id);
 
-			return result;
-		} catch (error) {
-			throw new GeneralError(NotarizationService.CLASS_NAME, "getFailed", undefined, error);
-		}
+					return result;
+				} catch (error) {
+					throw new GeneralError(NotarizationService.CLASS_NAME, "getFailed", undefined, error);
+				}
+			}
+		);
 	}
 
 	/**
@@ -121,12 +247,24 @@ export class NotarizationService implements INotarizationComponent {
 			controllerIdentity
 		);
 
-		try {
-			const notarizationConnector = this.getConnector(id);
-			await notarizationConnector.remove(controllerIdentity, id);
-		} catch (error) {
-			throw new GeneralError(NotarizationService.CLASS_NAME, "removeFailed", undefined, error);
-		}
+		await TracingHelper.withSpan(
+			this._tracingComponent,
+			NotarizationSpanNames.Remove,
+			{ attributes: { [NotarizationSpanAttributes.Id]: id } },
+			async () => {
+				try {
+					const notarizationConnector = this.getConnector(id);
+					await notarizationConnector.remove(controllerIdentity, id);
+
+					await MetricHelper.metricIncrement(
+						this._telemetryComponent,
+						NotarizationMetricIds.NotarizationsRemoved
+					);
+				} catch (error) {
+					throw new GeneralError(NotarizationService.CLASS_NAME, "removeFailed", undefined, error);
+				}
+			}
+		);
 	}
 
 	/**
@@ -144,12 +282,25 @@ export class NotarizationService implements INotarizationComponent {
 			controllerIdentity
 		);
 
-		try {
-			const notarizationConnector = this.getConnector(notarization.id);
-			await notarizationConnector.update(controllerIdentity, notarization);
-		} catch (error) {
-			throw new GeneralError(NotarizationService.CLASS_NAME, "updateFailed", undefined, error);
-		}
+		await TracingHelper.withSpan(
+			this._tracingComponent,
+			NotarizationSpanNames.Update,
+			{ attributes: { [NotarizationSpanAttributes.Id]: notarization.id } },
+			async () => {
+				try {
+					const notarizationConnector = this.getConnector(notarization.id);
+					await notarizationConnector.update(controllerIdentity, notarization);
+
+					await MetricHelper.metricIncrement(
+						this._telemetryComponent,
+						NotarizationMetricIds.NotarizationsUpdated,
+						{ mode: notarization.mode }
+					);
+				} catch (error) {
+					throw new GeneralError(NotarizationService.CLASS_NAME, "updateFailed", undefined, error);
+				}
+			}
+		);
 	}
 
 	/**
@@ -172,19 +323,36 @@ export class NotarizationService implements INotarizationComponent {
 			controllerIdentity
 		);
 
-		try {
-			const notarizationConnector = this.getConnector(id);
-			await notarizationConnector.transfer(controllerIdentity, id, recipientAddress);
-		} catch (error) {
-			throw new GeneralError(NotarizationService.CLASS_NAME, "transferFailed", undefined, error);
-		}
+		await TracingHelper.withSpan(
+			this._tracingComponent,
+			NotarizationSpanNames.Transfer,
+			{ attributes: { [NotarizationSpanAttributes.Id]: id } },
+			async () => {
+				try {
+					const notarizationConnector = this.getConnector(id);
+					await notarizationConnector.transfer(controllerIdentity, id, recipientAddress);
+
+					await MetricHelper.metricIncrement(
+						this._telemetryComponent,
+						NotarizationMetricIds.NotarizationsTransferred
+					);
+				} catch (error) {
+					throw new GeneralError(
+						NotarizationService.CLASS_NAME,
+						"transferFailed",
+						undefined,
+						error
+					);
+				}
+			}
+		);
 	}
 
 	/**
 	 * Get the connector from the id.
 	 * @param id The id of the notarization in urn format.
 	 * @returns The connector.
-	 * @throws {GeneralError} If the namespace does not match.
+	 * @throws GeneralError If the namespace does not match.
 	 * @internal
 	 */
 	private getConnector(id: string): INotarizationConnector {

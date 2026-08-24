@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.9.2-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.2-next.2...notarization-rest-client-v0.9.2-next.3) (2026-08-20)
+
+
+### Miscellaneous Chores
+
+* **notarization-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @twin.org/notarization-models bumped from 0.9.2-next.2 to 0.9.2-next.3
+
+## [0.9.2-next.2](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.2-next.1...notarization-rest-client-v0.9.2-next.2) (2026-08-10)
+
+
+### Miscellaneous Chores
+
+* **notarization-rest-client:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @twin.org/notarization-models bumped from 0.9.2-next.1 to 0.9.2-next.2
+
+## [0.9.2-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.2-next.0...notarization-rest-client-v0.9.2-next.1) (2026-08-07)
+
+
+### Features
+
+* enhanced rest testing ([#24](https://github.com/iotaledger/twin-notarization/issues/24)) ([d64ec82](https://github.com/iotaledger/twin-notarization/commit/d64ec82241ea83482d4f2d7ae6a5f6a0787a792c))
+* health provider ([#40](https://github.com/iotaledger/twin-notarization/issues/40)) ([de35c94](https://github.com/iotaledger/twin-notarization/commit/de35c946efa06a5ab639d72fd12aecd4f826d1f7))
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* rest enhancements ([dc80f22](https://github.com/iotaledger/twin-notarization/commit/dc80f22deb24603d0928a899b22617fc55ce40a5))
+* rest enhancements ([9300659](https://github.com/iotaledger/twin-notarization/commit/930065978246dae9b91b1d10e28f529bce645a08))
+* rest enhancements ([#26](https://github.com/iotaledger/twin-notarization/issues/26)) ([304139f](https://github.com/iotaledger/twin-notarization/commit/304139f2a116334db6793af90dc8a560dc59f3e6))
+* typescript 6 update ([93ebcba](https://github.com/iotaledger/twin-notarization/commit/93ebcbaa8bd86caf81fcbac838aa87ef9c0e4da8))
+
+
+### Bug Fixes
+
+* rest payload data as base64 ([#7](https://github.com/iotaledger/twin-notarization/issues/7)) ([f8ac0d9](https://github.com/iotaledger/twin-notarization/commit/f8ac0d939bdf3351061464182b1b2f38e8fe46fc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @twin.org/notarization-models bumped from 0.9.2-next.0 to 0.9.2-next.1
+
 ## [0.9.1](https://github.com/iotaledger/twin-notarization/compare/notarization-rest-client-v0.9.1...notarization-rest-client-v0.9.1) (2026-07-27)
 
 

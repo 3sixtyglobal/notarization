@@ -9,5 +9,11 @@
 			"updateFailed": "The update of the notarization failed",
 			"transferFailed": "The transfer of the notarization failed"
 		}
+	},
+	"health": {
+		"notarizationService": {
+			"healthDescription": "Notarization service application health check",
+			"getNotarizationFailed": "Failed to retrieve the health check notarization"
+		}
 	}
 }

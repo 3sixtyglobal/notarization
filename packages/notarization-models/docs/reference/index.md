@@ -14,9 +14,16 @@
 
 ## Type Aliases
 
+- [NotarizationMetricIds](type-aliases/NotarizationMetricIds.md)
 - [NotarizationMode](type-aliases/NotarizationMode.md)
+- [NotarizationSpanAttributes](type-aliases/NotarizationSpanAttributes.md)
+- [NotarizationSpanNames](type-aliases/NotarizationSpanNames.md)
 
 ## Variables
 
 - [NotarizationConnectorFactory](variables/NotarizationConnectorFactory.md)
+- [NotarizationMetricIds](variables/NotarizationMetricIds.md)
+- [NotarizationMetrics](variables/NotarizationMetrics.md)
 - [NotarizationMode](variables/NotarizationMode.md)
+- [NotarizationSpanAttributes](variables/NotarizationSpanAttributes.md)
+- [NotarizationSpanNames](variables/NotarizationSpanNames.md)
