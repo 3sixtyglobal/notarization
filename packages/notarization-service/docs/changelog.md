@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.2](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.2...notarization-service-v0.9.2) (2026-08-24)
+
+
+### Features
+
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* release to production ([#20](https://github.com/iotaledger/twin-notarization/issues/20)) ([3ccd338](https://github.com/iotaledger/twin-notarization/commit/3ccd338824721a3925c5000c859c8a2c5331286c))
+* release to production ([#36](https://github.com/iotaledger/twin-notarization/issues/36)) ([e05ccf6](https://github.com/iotaledger/twin-notarization/commit/e05ccf66cbb73edf170dc401656857137823a7a7))
+* release to production ([#51](https://github.com/iotaledger/twin-notarization/issues/51)) ([171655c](https://github.com/iotaledger/twin-notarization/commit/171655c5eea25c3aba0c4f66ed1fcb1b3233313f))
+
 ## [0.9.2-next.3](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.9.2-next.2...notarization-service-v0.9.2-next.3) (2026-08-20)
 
 
