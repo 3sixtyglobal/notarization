@@ -11,25 +11,25 @@ export class Notarization {
 	/**
 	 * The identity of the notarization record.
 	 */
-	@property({ type: "string", isPrimary: true })
+	@property({ type: "string", isPrimary: true, maxLength: 255 })
 	public id!: string;
 
 	/**
 	 * The notarization mode.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", maxLength: 16 })
 	public mode!: NotarizationMode;
 
 	/**
 	 * The date and time when the notarization was created, in ISO 8601 format.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", format: "date-time" })
 	public dateCreated!: string;
 
 	/**
 	 * The date and time when the notarization was last modified, in ISO 8601 format.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", format: "date-time", optional: true })
 	public dateModified?: string;
 
 	/**
@@ -41,19 +41,19 @@ export class Notarization {
 	/**
 	 * An optional description of the notarization that cannot be changed after creation.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", maxLength: 4096, optional: true })
 	public immutableDescription?: string;
 
 	/**
 	 * An optional description of the notarization that can be modified until the notarization is locked.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", maxLength: 4096, optional: true })
 	public description?: string;
 
 	/**
 	 * An optional lock date, in ISO 8601 format, that prevents deletion until the date is reached.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", format: "date-time", optional: true })
 	public deleteLockDateTime?: string;
 
 	/**
@@ -65,18 +65,18 @@ export class Notarization {
 	/**
 	 * An optional transfer lock date-time, in ISO 8601 format.
 	 */
-	@property({ type: "string", optional: true })
+	@property({ type: "string", format: "date-time", optional: true })
 	public transferLockDateTime?: string;
 
 	/**
 	 * The controller identity.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", maxLength: 255 })
 	public controllerIdentity!: string;
 
 	/**
 	 * The owner of the notarization.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", maxLength: 255 })
 	public owner!: string;
 }
