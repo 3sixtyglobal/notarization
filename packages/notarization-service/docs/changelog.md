@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.11.0...notarization-service-v0.11.0) (2026-09-29)
+
+
+### Features
+
+* initial commit ([2271741](https://github.com/iotaledger/twin-notarization/commit/2271741a6f3daae544b24ccd47a5075a1a2eaaac))
+* release to production ([#20](https://github.com/iotaledger/twin-notarization/issues/20)) ([3ccd338](https://github.com/iotaledger/twin-notarization/commit/3ccd338824721a3925c5000c859c8a2c5331286c))
+* release to production ([#36](https://github.com/iotaledger/twin-notarization/issues/36)) ([e05ccf6](https://github.com/iotaledger/twin-notarization/commit/e05ccf66cbb73edf170dc401656857137823a7a7))
+* release to production ([#51](https://github.com/iotaledger/twin-notarization/issues/51)) ([171655c](https://github.com/iotaledger/twin-notarization/commit/171655c5eea25c3aba0c4f66ed1fcb1b3233313f))
+* release to production [skip ci] ([#58](https://github.com/iotaledger/twin-notarization/issues/58)) ([9f7112b](https://github.com/iotaledger/twin-notarization/commit/9f7112bb85b8d946d082d285379a9848e01248a5))
+* release to production [skip ci] ([#65](https://github.com/iotaledger/twin-notarization/issues/65)) ([b110c6e](https://github.com/iotaledger/twin-notarization/commit/b110c6e57bb8aa34e380fe7e20b8d599538ff863))
+
 ## [0.10.1-next.1](https://github.com/iotaledger/twin-notarization/compare/notarization-service-v0.10.1-next.0...notarization-service-v0.10.1-next.1) (2026-09-18)
 
 
