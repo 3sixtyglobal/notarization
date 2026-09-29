@@ -1,7 +1,7 @@
 {
-	"packages/notarization-models": "0.9.3-next.1",
-	"packages/notarization-connector-iota": "0.9.3-next.1",
-	"packages/notarization-connector-entity-storage": "0.9.3-next.1",
-	"packages/notarization-service": "0.9.3-next.1",
-	"packages/notarization-rest-client": "0.9.3-next.1"
+	"packages/notarization-models": "0.10.1-next.1",
+	"packages/notarization-connector-iota": "0.10.1-next.1",
+	"packages/notarization-connector-entity-storage": "0.10.1-next.1",
+	"packages/notarization-service": "0.10.1-next.1",
+	"packages/notarization-rest-client": "0.10.1-next.1"
 }
