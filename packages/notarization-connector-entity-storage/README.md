@@ -19,3 +19,7 @@ The API reference is available in [docs/reference/index.md](docs/reference/index
 ## Changelog
 
 The changes between each version can be found in [docs/changelog.md](docs/changelog.md)
+
+## Origin
+
+This package is derived from the original [iotaledger/twin-notarization](https://github.com/iotaledger/twin-notarization/tree/next/packages/notarization-connector-entity-storage) repository.

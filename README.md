@@ -15,3 +15,7 @@ The components are designed to be composed, so orchestration and transport can r
 ## Contributing
 
 To contribute to this repository see the guidelines for building and publishing in [CONTRIBUTING](./CONTRIBUTING.md)
+
+## Origin
+
+This repository is derived from the original [iotaledger/twin-notarization](https://github.com/iotaledger/twin-notarization) repository.

@@ -4,7 +4,7 @@
 	"description": "Notarization service orchestration with REST route generation.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/twin-notarization.git",
+		"url": "git+https://github.com/3sixtyglobal/twin-notarization.git",
 		"directory": "packages/notarization-service"
 	},
 	"author": "martyn.janes@iota.org",
@@ -87,7 +87,7 @@
 		"business-logic"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/twin-notarization/issues"
+		"url": "git+https://github.com/3sixtyglobal/twin-notarization/issues"
 	},
 	"homepage": "https://twindev.org"
 }

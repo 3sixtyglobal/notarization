@@ -4,7 +4,7 @@
 	"description": "IOTA-backed notarization connector for network operations and on-ledger state.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/iotaledger/twin-notarization.git",
+		"url": "git+https://github.com/3sixtyglobal/twin-notarization.git",
 		"directory": "packages/notarization-connector-iota"
 	},
 	"author": "martyn.janes@iota.org",
@@ -89,7 +89,7 @@
 		"integration"
 	],
 	"bugs": {
-		"url": "git+https://github.com/iotaledger/twin-notarization/issues"
+		"url": "git+https://github.com/3sixtyglobal/twin-notarization/issues"
 	},
 	"homepage": "https://twindev.org"
 }
