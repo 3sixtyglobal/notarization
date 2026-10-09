@@ -1,17 +1,17 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ComponentFactory, Factory, Is } from "@twin.org/core";
+import { ComponentFactory, Factory, Is } from "@3sixty/core";
 import {
 	NotarizationConnectorFactory,
 	NotarizationMetricIds,
 	type INotarization,
 	type INotarizationConnector
-} from "@twin.org/notarization-models";
+} from "@3sixty/notarization-models";
 import {
 	MetricType,
 	type ITelemetryComponent,
 	type ITelemetryMetric
-} from "@twin.org/telemetry-models";
+} from "@3sixty/telemetry-models";
 import { NotarizationService } from "../src/notarizationService.js";
 
 const TEST_CONTROLLER = "did:test:controller";

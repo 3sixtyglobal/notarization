@@ -1,4 +1,4 @@
-# @twin.org/notarization-connector-iota
+# @3sixty/notarization-connector-iota
 
 ## Classes
 

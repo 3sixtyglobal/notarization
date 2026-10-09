@@ -1,5 +1,13 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@3sixty/core";
+import { AccountHelper } from "@3sixty/dlt-account";
+import { type IIotaTransactionBlockResponse, Iota } from "@3sixty/dlt-iota";
+import type { ILoggingComponent } from "@3sixty/logging-models";
+import { nameof } from "@3sixty/nameof";
+import type { INotarization, INotarizationConnector } from "@3sixty/notarization-models";
+import { NotarizationMode } from "@3sixty/notarization-models";
+import { VaultConnectorFactory, type IVaultConnector } from "@3sixty/vault-models";
 import { Transaction } from "@iota/iota-sdk/transactions";
 import {
 	NotarizationClient,
@@ -9,14 +17,6 @@ import {
 	type LockMetadata,
 	type OnChainNotarization
 } from "@iota/notarization/node/index.js";
-import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@twin.org/core";
-import { AccountHelper } from "@twin.org/dlt-account";
-import { type IIotaTransactionBlockResponse, Iota } from "@twin.org/dlt-iota";
-import type { ILoggingComponent } from "@twin.org/logging-models";
-import { nameof } from "@twin.org/nameof";
-import type { INotarization, INotarizationConnector } from "@twin.org/notarization-models";
-import { NotarizationMode } from "@twin.org/notarization-models";
-import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { IIotaNotarizationConnectorConfig } from "./models/IIotaNotarizationConnectorConfig.js";
 import type { IIotaNotarizationConnectorConstructorOptions } from "./models/IIotaNotarizationConnectorConstructorOptions.js";
 import type { INotarizationTransactionBuilder } from "./models/INotarizationTransactionBuilder.js";

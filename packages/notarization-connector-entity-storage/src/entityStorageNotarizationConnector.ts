@@ -10,15 +10,15 @@ import {
 	NotFoundError,
 	RandomHelper,
 	Urn
-} from "@twin.org/core";
+} from "@3sixty/core";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@twin.org/entity-storage-models";
-import type { ILoggingComponent } from "@twin.org/logging-models";
-import { nameof } from "@twin.org/nameof";
-import type { INotarization, INotarizationConnector } from "@twin.org/notarization-models";
-import { NotarizationMode } from "@twin.org/notarization-models";
+} from "@3sixty/entity-storage-models";
+import type { ILoggingComponent } from "@3sixty/logging-models";
+import { nameof } from "@3sixty/nameof";
+import type { INotarization, INotarizationConnector } from "@3sixty/notarization-models";
+import { NotarizationMode } from "@3sixty/notarization-models";
 import type { Notarization } from "./entities/notarization.js";
 import type { IEntityStorageNotarizationConnectorConstructorOptions } from "./models/IEntityStorageNotarizationConnectorConstructorOptions.js";
 

@@ -1,11 +1,11 @@
-# TWIN Notarization REST Client
+# 3Sixty Notarization REST Client
 
 This package provides an HTTP client for calling notarization service endpoints from applications. It offers a consistent client interface for create, get, update, transfer, and remove operations.
 
 ## Installation
 
 ```shell
-npm install @twin.org/notarization-rest-client
+npm install @3sixty/notarization-rest-client
 ```
 
 ## Examples

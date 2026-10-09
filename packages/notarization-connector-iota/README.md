@@ -1,11 +1,11 @@
-# TWIN Notarization Connector IOTA
+# 3Sixty Notarization Connector IOTA
 
 This package provides an IOTA-backed notarization connector for network operations and on-ledger state. It is designed for applications that need ledger-level ownership and metadata operations.
 
 ## Installation
 
 ```shell
-npm install @twin.org/notarization-connector-iota
+npm install @3sixty/notarization-connector-iota
 ```
 
 ## Docker
@@ -13,10 +13,10 @@ npm install @twin.org/notarization-connector-iota
 To perform testing of this component it may be necessary to launch a local instance of the gas station to communicate with.
 
 ```shell
-docker run -d --name twin-gas-station-test -p 6379:6379 -p 9527:9527 -p 9184:9184 -e IOTA_NODE_URL="https://api.testnet.iota.cafe" -e GAS_STATION_AUTH="qEyCL6d9BKKFl/tfDGAKeGFkhUlf7FkqiGV7Xw4JUsI=" -e GAS_STATION_KEYPAIR="..." twinfoundation/twin-gas-station-test:latest
+docker run -d --name 3sixty-gas-station-test -p 6379:6379 -p 9527:9527 -p 9184:9184 -e IOTA_NODE_URL="https://grpc.testnet.iota.cafe" -e GAS_STATION_AUTH="qEyCL6d9BKKFl/tfDGAKeGFkhUlf7FkqiGV7Xw4JUsI=" -e GAS_STATION_KEYPAIR="..." ghcr.io/3sixtyglobal/3sixty-gas-station-test:latest
 ```
 
-To generate `GAS_STATION_KEYPAIR` see <https://github.com/3sixtyglobal/twin-dlt/blob/main/packages/dlt-iota/README.md>
+To generate `GAS_STATION_KEYPAIR` see <https://github.com/3sixtyglobal/dlt/blob/main/packages/dlt-iota/README.md>
 
 ## Examples
 

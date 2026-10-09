@@ -5,8 +5,8 @@ Use these snippets to configure a network-backed connector and execute create, r
 ## IotaNotarizationConnector
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { IotaNotarizationConnector } from '@twin.org/notarization-connector-iota';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { IotaNotarizationConnector } from '@3sixty/notarization-connector-iota';
 
 const connector = new IotaNotarizationConnector({
   config: {
@@ -43,8 +43,8 @@ await connector.remove('did:example:recipient', id);
 ```
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { IotaNotarizationConnector } from '@twin.org/notarization-connector-iota';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { IotaNotarizationConnector } from '@3sixty/notarization-connector-iota';
 
 const connector = new IotaNotarizationConnector({
   config: {

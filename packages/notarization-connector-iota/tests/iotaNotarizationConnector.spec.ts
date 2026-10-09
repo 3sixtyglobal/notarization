@@ -1,7 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Urn } from "@twin.org/core";
-import { NotarizationMode } from "@twin.org/notarization-models";
+import { Urn } from "@3sixty/core";
+import { NotarizationMode } from "@3sixty/notarization-models";
 import {
 	TEST_ADDRESS_2,
 	TEST_CLIENT_OPTIONS,

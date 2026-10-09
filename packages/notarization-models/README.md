@@ -1,11 +1,11 @@
-# TWIN Notarization Models
+# 3Sixty Notarization Models
 
 This package defines shared notarization interfaces, request and response models, and connector contracts. It provides the common contract layer that keeps implementations interoperable across runtime environments.
 
 ## Installation
 
 ```shell
-npm install @twin.org/notarization-models
+npm install @3sixty/notarization-models
 ```
 
 ## Examples

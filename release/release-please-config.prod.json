@@ -8,6 +8,7 @@
 	"release-type": "node",
 	"initial-version": "0.0.1",
 	"versioning": "default",
+	"last-release-sha": "798cf7177357100a8a0968c38cdeff7c411eb095",
 	"packages": {
 		"packages/notarization-models": {
 			"package-name": "notarization-models",

@@ -1,7 +1,7 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { entity, property } from "@twin.org/entity";
-import type { NotarizationMode } from "@twin.org/notarization-models";
+import { entity, property } from "@3sixty/entity";
+import type { NotarizationMode } from "@3sixty/notarization-models";
 
 /**
  * Class describing a notarization record.

@@ -9,10 +9,10 @@ import {
 	type INoContentResponse,
 	type IRestRoute,
 	type ITag
-} from "@twin.org/api-models";
-import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { Converter, ComponentFactory, Guards } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/api-models";
+import { ContextIdHelper, ContextIdKeys, ContextIdStore } from "@3sixty/context";
+import { Converter, ComponentFactory, Guards } from "@3sixty/core";
+import { nameof } from "@3sixty/nameof";
 import type {
 	INotarizationComponent,
 	INotarizationCreateRequest,
@@ -21,8 +21,8 @@ import type {
 	INotarizationRemoveRequest,
 	INotarizationTransferRequest,
 	INotarizationUpdateRequest
-} from "@twin.org/notarization-models";
-import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@twin.org/web";
+} from "@3sixty/notarization-models";
+import { HeaderTypes, HttpStatusCode, type IHttpHeaders } from "@3sixty/web";
 
 /**
  * The source identifier used in guard error messages for notarization routes.

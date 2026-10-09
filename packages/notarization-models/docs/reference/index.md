@@ -1,4 +1,4 @@
-# @twin.org/notarization-models
+# @3sixty/notarization-models
 
 ## Interfaces
 

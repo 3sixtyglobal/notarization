@@ -5,8 +5,8 @@ Use these snippets to call HTTP endpoints for creation, retrieval, updates, tran
 ## NotarizationRestClient
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { NotarizationRestClient } from '@twin.org/notarization-rest-client';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { NotarizationRestClient } from '@3sixty/notarization-rest-client';
 
 const client = new NotarizationRestClient({
   endpoint: 'http://localhost:8080'
@@ -28,8 +28,8 @@ console.log(notarization.mode); // dynamic
 ```
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { NotarizationRestClient } from '@twin.org/notarization-rest-client';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { NotarizationRestClient } from '@3sixty/notarization-rest-client';
 
 const client = new NotarizationRestClient({
   endpoint: 'http://localhost:8080'

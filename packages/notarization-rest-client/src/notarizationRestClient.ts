@@ -1,14 +1,14 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseRestClient } from "@twin.org/api-core";
+import { BaseRestClient } from "@3sixty/api-core";
 import {
 	HttpHeaderHelper,
 	type IBaseRestClientConfig,
 	type ICreatedResponse,
 	type INoContentResponse
-} from "@twin.org/api-models";
-import { Converter, Guards } from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/api-models";
+import { Converter, Guards } from "@3sixty/core";
+import { nameof } from "@3sixty/nameof";
 import type {
 	INotarization,
 	INotarizationComponent,
@@ -18,8 +18,8 @@ import type {
 	INotarizationRemoveRequest,
 	INotarizationTransferRequest,
 	INotarizationUpdateRequest
-} from "@twin.org/notarization-models";
-import { HttpMethod } from "@twin.org/web";
+} from "@3sixty/notarization-models";
+import { HttpMethod } from "@3sixty/web";
 
 /**
  * Client for performing notarization operations through to REST endpoints.

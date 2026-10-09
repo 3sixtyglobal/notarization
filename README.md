@@ -1,4 +1,4 @@
-# TWIN Notarization
+# 3Sixty Notarization
 
 This repository provides modular components for notarization workflows across model, connector, service, and client layers. Together they allow applications to define notarization contracts once and apply them consistently across local storage and IOTA-backed execution paths.
 

@@ -6,8 +6,8 @@ import {
 	type HealthApplicationCallback,
 	type IHealth,
 	type IHealthProviderComponent
-} from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
+} from "@3sixty/api-models";
+import { ContextIdKeys, ContextIdStore } from "@3sixty/context";
 import {
 	BaseError,
 	ComponentFactory,
@@ -16,8 +16,8 @@ import {
 	Is,
 	RandomHelper,
 	Urn
-} from "@twin.org/core";
-import { nameof } from "@twin.org/nameof";
+} from "@3sixty/core";
+import { nameof } from "@3sixty/nameof";
 import {
 	NotarizationConnectorFactory,
 	NotarizationMetricIds,
@@ -26,8 +26,8 @@ import {
 	type INotarization,
 	type INotarizationComponent,
 	type INotarizationConnector
-} from "@twin.org/notarization-models";
-import { MetricHelper, type ITelemetryComponent } from "@twin.org/telemetry-models";
+} from "@3sixty/notarization-models";
+import { MetricHelper, type ITelemetryComponent } from "@3sixty/telemetry-models";
 import type { INotarizationServiceConstructorOptions } from "./models/INotarizationServiceConstructorOptions.js";
 
 /**

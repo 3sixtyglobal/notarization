@@ -1,4 +1,4 @@
-# @twin.org/notarization-connector-entity-storage
+# @3sixty/notarization-connector-entity-storage
 
 ## Classes
 

@@ -1,11 +1,11 @@
-# TWIN Notarization Connector Entity Storage
+# 3Sixty Notarization Connector Entity Storage
 
 This package provides an entity storage notarization connector for local persistence and test-oriented workflows. It is useful for local development and integration testing where a storage abstraction is needed without relying on a live network.
 
 ## Installation
 
 ```shell
-npm install @twin.org/notarization-connector-entity-storage
+npm install @3sixty/notarization-connector-entity-storage
 ```
 
 ## Examples

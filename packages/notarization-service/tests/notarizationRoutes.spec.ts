@@ -1,13 +1,13 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IHttpRequestContext } from "@twin.org/api-models";
-import { ContextIdKeys, ContextIdStore } from "@twin.org/context";
-import { Converter, ComponentFactory, Factory } from "@twin.org/core";
+import type { IHttpRequestContext } from "@3sixty/api-models";
+import { ContextIdKeys, ContextIdStore } from "@3sixty/context";
+import { Converter, ComponentFactory, Factory } from "@3sixty/core";
 import {
 	NotarizationConnectorFactory,
 	type INotarization,
 	type INotarizationComponent
-} from "@twin.org/notarization-models";
+} from "@3sixty/notarization-models";
 import {
 	generateRestRoutesNotarization,
 	notarizationCreate,

@@ -5,15 +5,15 @@ Use these snippets to set up local persistence, create records, and run lifecycl
 ## EntityStorageNotarizationConnector
 
 ```typescript
-import { MemoryEntityStorageConnector } from '@twin.org/entity-storage-connector-memory';
-import { EntityStorageConnectorFactory } from '@twin.org/entity-storage-models';
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { nameof } from '@twin.org/nameof';
+import { MemoryEntityStorageConnector } from '@3sixty/entity-storage-connector-memory';
+import { EntityStorageConnectorFactory } from '@3sixty/entity-storage-models';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { nameof } from '@3sixty/nameof';
 import {
   EntityStorageNotarizationConnector,
   Notarization,
   initSchema
-} from '@twin.org/notarization-connector-entity-storage';
+} from '@3sixty/notarization-connector-entity-storage';
 
 initSchema();
 
@@ -53,8 +53,8 @@ await connector.remove('did:example:controller', id);
 ## Notarization
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import type { Notarization } from '@twin.org/notarization-connector-entity-storage';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import type { Notarization } from '@3sixty/notarization-connector-entity-storage';
 
 const record: Notarization = {
   id: 'abc123',
@@ -73,9 +73,9 @@ console.log(record.mode); // dynamic
 ## initSchema
 
 ```typescript
-import { EntitySchemaFactory } from '@twin.org/entity';
-import { nameof } from '@twin.org/nameof';
-import { Notarization, initSchema } from '@twin.org/notarization-connector-entity-storage';
+import { EntitySchemaFactory } from '@3sixty/entity';
+import { nameof } from '@3sixty/nameof';
+import { Notarization, initSchema } from '@3sixty/notarization-connector-entity-storage';
 
 initSchema();
 const schema = EntitySchemaFactory.get(nameof<Notarization>());

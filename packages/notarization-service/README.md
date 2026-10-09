@@ -1,11 +1,11 @@
-# TWIN Notarization Service
+# 3Sixty Notarization Service
 
 This package provides notarization service orchestration with REST route generation. It centralises connector resolution behind a consistent interface so applications can invoke notarization actions without coupling to a specific backend.
 
 ## Installation
 
 ```shell
-npm install @twin.org/notarization-service
+npm install @3sixty/notarization-service
 ```
 
 ## Examples

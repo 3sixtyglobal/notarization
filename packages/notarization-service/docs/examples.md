@@ -10,8 +10,8 @@ import {
   NotarizationMode,
   type INotarization,
   type INotarizationConnector
-} from '@twin.org/notarization-models';
-import { NotarizationService } from '@twin.org/notarization-service';
+} from '@3sixty/notarization-models';
+import { NotarizationService } from '@3sixty/notarization-service';
 
 class DemoConnector implements INotarizationConnector {
   private readonly store: Map<string, INotarization>;
@@ -90,8 +90,8 @@ console.log(notarization.id); // notarization:urn:notarization:demo:1
 ```
 
 ```typescript
-import { NotarizationMode } from '@twin.org/notarization-models';
-import { NotarizationService } from '@twin.org/notarization-service';
+import { NotarizationMode } from '@3sixty/notarization-models';
+import { NotarizationService } from '@3sixty/notarization-service';
 
 const service = new NotarizationService({
   config: {
@@ -122,14 +122,14 @@ await service.remove('notarization:urn:notarization:demo:1', 'did:example:contro
 ## generateRestRoutesNotarization
 
 ```typescript
-import { ContextIdKeys, ContextIdStore } from '@twin.org/context';
-import { ComponentFactory } from '@twin.org/core';
+import { ContextIdKeys, ContextIdStore } from '@3sixty/context';
+import { ComponentFactory } from '@3sixty/core';
 import {
   NotarizationMode,
   type INotarization,
   type INotarizationComponent
-} from '@twin.org/notarization-models';
-import { generateRestRoutesNotarization } from '@twin.org/notarization-service';
+} from '@3sixty/notarization-models';
+import { generateRestRoutesNotarization } from '@3sixty/notarization-service';
 
 class DemoComponent implements INotarizationComponent {
   public className(): string {

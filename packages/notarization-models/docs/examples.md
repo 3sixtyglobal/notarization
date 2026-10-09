@@ -10,7 +10,7 @@ import {
   NotarizationMode,
   type INotarization,
   type INotarizationConnector
-} from '@twin.org/notarization-models';
+} from '@3sixty/notarization-models';
 
 class InMemoryConnector implements INotarizationConnector {
   private readonly store: Map<string, INotarization>;
@@ -87,7 +87,7 @@ import {
   type INotarizationCreateRequest,
   type INotarizationGetRequest,
   type INotarizationGetResponse
-} from '@twin.org/notarization-models';
+} from '@3sixty/notarization-models';
 
 const newNotarizationRequest: INotarizationCreateRequest = {
   body: {

@@ -1,4 +1,4 @@
-# @twin.org/notarization-service
+# @3sixty/notarization-service
 
 ## Classes
 

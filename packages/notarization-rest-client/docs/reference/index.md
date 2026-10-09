@@ -1,4 +1,4 @@
-# @twin.org/notarization-rest-client
+# @3sixty/notarization-rest-client
 
 ## Classes
 
