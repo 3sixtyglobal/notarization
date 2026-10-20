@@ -1,5 +1,5 @@
 {
-	"name": "@3sixty/notarization",
+	"name": "3sixty-notarization",
 	"version": "0.0.0",
 	"description": "Modular Notarization connectors, services, and tooling.",
 	"repository": {
