@@ -35,8 +35,8 @@
 		"@3sixty/nameof": "next",
 		"@3sixty/notarization-models": "0.20.0-next.0",
 		"@3sixty/vault-models": "next",
-		"@iota/iota-sdk": "1.17.0",
-		"@iota/notarization": "0.1.15"
+		"@iota/iota-sdk": "1.15.0",
+		"@iota/notarization": "0.1.14"
 	},
 	"devDependencies": {
 		"@3sixty/crypto": "next",
