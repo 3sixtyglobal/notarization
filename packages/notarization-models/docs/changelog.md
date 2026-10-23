@@ -1,0 +1,9 @@
+# Changelog
+
+## [0.20.0-next.1](https://github.com/3sixtyglobal/notarization/compare/notarization-models-v0.20.0-next.0...notarization-models-v0.20.0-next.1) (2026-10-23)
+
+
+### Features
+
+* publish packages under the [@3sixty](https://github.com/3sixty) namespace ([bf52d44](https://github.com/3sixtyglobal/notarization/commit/bf52d442f5b5cad624f51ce6136581eadd529a35))
+* updated ts compile ([5c25639](https://github.com/3sixtyglobal/notarization/commit/5c25639f6d0d33d1c9f176d590b18067774c7b65))
