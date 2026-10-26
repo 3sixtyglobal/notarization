@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0-next.2](https://github.com/3sixtyglobal/notarization/compare/notarization-models-v0.20.0-next.1...notarization-models-v0.20.0-next.2) (2026-10-26)
+
+
+### Features
+
+* release to next [skip ci] ([#5](https://github.com/3sixtyglobal/notarization/issues/5)) ([11bbb5e](https://github.com/3sixtyglobal/notarization/commit/11bbb5e9c2e9869b2c0b2b811dfd2cab2e748667))
+
 ## [0.20.0-next.1](https://github.com/3sixtyglobal/notarization/compare/notarization-models-v0.20.0-next.0...notarization-models-v0.20.0-next.1) (2026-10-23)
 
 

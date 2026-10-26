@@ -1,6 +1,6 @@
 {
 	"name": "@3sixty/notarization-connector-iota",
-	"version": "0.20.0-next.1",
+	"version": "0.20.0-next.2",
 	"description": "IOTA-backed notarization connector for network operations and on-ledger state.",
 	"repository": {
 		"type": "git",
@@ -35,7 +35,7 @@
 		"@3sixty/dlt-iota": "next",
 		"@3sixty/logging-models": "next",
 		"@3sixty/nameof": "next",
-		"@3sixty/notarization-models": "0.20.0-next.1",
+		"@3sixty/notarization-models": "0.20.0-next.2",
 		"@3sixty/vault-models": "next",
 		"@iota/iota-sdk": "1.15.0",
 		"@iota/notarization": "0.1.14"
