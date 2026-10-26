@@ -257,7 +257,7 @@ importers:
         specifier: next
         version: 0.20.0-next.4
       '@3sixty/notarization-models':
-        specifier: 0.20.0-next.1
+        specifier: 0.20.0-next.2
         version: link:../notarization-models
     devDependencies:
       '@3sixty/entity-storage-connector-memory':
@@ -321,7 +321,7 @@ importers:
         specifier: next
         version: 0.20.0-next.4
       '@3sixty/notarization-models':
-        specifier: 0.20.0-next.1
+        specifier: 0.20.0-next.2
         version: link:../notarization-models
       '@3sixty/vault-models':
         specifier: next
@@ -456,7 +456,7 @@ importers:
         specifier: next
         version: 0.20.0-next.4(@types/node@26.6.2)(@vitest/coverage-v8@5.0.5)(vite@8.3.4(@types/node@26.6.2)(jiti@2.7.0))
       '@3sixty/notarization-models':
-        specifier: 0.20.0-next.1
+        specifier: 0.20.0-next.2
         version: link:../notarization-models
       '@3sixty/validate-locales':
         specifier: next
@@ -501,7 +501,7 @@ importers:
         specifier: next
         version: 0.20.0-next.4
       '@3sixty/notarization-models':
-        specifier: 0.20.0-next.1
+        specifier: 0.20.0-next.2
         version: link:../notarization-models
       '@3sixty/telemetry-models':
         specifier: next
@@ -523,7 +523,7 @@ importers:
         specifier: next
         version: 0.20.0-next.4(@types/node@26.6.2)(@vitest/coverage-v8@5.0.5)(vite@8.3.4(@types/node@26.6.2)(jiti@2.7.0))
       '@3sixty/notarization-connector-entity-storage':
-        specifier: 0.20.0-next.1
+        specifier: 0.20.0-next.2
         version: link:../notarization-connector-entity-storage
       '@3sixty/ts-to-openapi':
         specifier: next

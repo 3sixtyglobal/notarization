@@ -1,6 +1,6 @@
 {
 	"name": "@3sixty/notarization-connector-entity-storage",
-	"version": "0.20.0-next.1",
+	"version": "0.20.0-next.2",
 	"description": "Entity storage notarization connector for local persistence and test-oriented workflows.",
 	"repository": {
 		"type": "git",
@@ -35,7 +35,7 @@
 		"@3sixty/entity-storage-models": "next",
 		"@3sixty/logging-models": "next",
 		"@3sixty/nameof": "next",
-		"@3sixty/notarization-models": "0.20.0-next.1"
+		"@3sixty/notarization-models": "0.20.0-next.2"
 	},
 	"devDependencies": {
 		"@3sixty/entity-storage-connector-memory": "next",
