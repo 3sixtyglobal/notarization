@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Urn } from "@3sixty/core";
+import { DurationConstants, Urn } from "@3sixty/core";
 import { NotarizationMode } from "@3sixty/notarization-models";
 import {
 	TEST_ADDRESS_2,
@@ -13,6 +13,8 @@ import {
 	setupTestEnv
 } from "./setupTestEnv.js";
 import { IotaNotarizationConnector } from "../src/iotaNotarizationConnector.js";
+
+const TWO_MINUTES_MS = 2 * DurationConstants.MsPerMinute;
 
 const TEST_DATA = new Uint8Array([1, 2, 3, 4]);
 const UPDATED_TEST_DATA = new Uint8Array([9, 8, 7, 6]);
@@ -51,7 +53,7 @@ describe("IotaNotarizationConnector", () => {
 			data: TEST_DATA,
 			description: "dynamic description",
 			immutableDescription: "immutable description",
-			transferLockDateTime: new Date(Date.now() + 120000).toISOString()
+			transferLockDateTime: new Date(Date.now() + TWO_MINUTES_MS).toISOString()
 		});
 
 		debugOnChainLocation(id);
@@ -271,7 +273,7 @@ describe("IotaNotarizationConnector", () => {
 			data: TEST_DATA,
 			description: "transfer-locked",
 			immutableDescription: "transfer-locked-immutable",
-			transferLockDateTime: new Date(Date.now() + 120000).toISOString()
+			transferLockDateTime: new Date(Date.now() + TWO_MINUTES_MS).toISOString()
 		});
 
 		debugOnChainLocation(id);

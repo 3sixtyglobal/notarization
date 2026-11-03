@@ -1,6 +1,14 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, ComponentFactory, GeneralError, Guards, Is, Urn } from "@3sixty/core";
+import {
+	Coerce,
+	ComponentFactory,
+	DurationConstants,
+	GeneralError,
+	Guards,
+	Is,
+	Urn
+} from "@3sixty/core";
 import { AccountHelper } from "@3sixty/dlt-account";
 import { type IIotaTransactionBlockResponse, Iota } from "@3sixty/dlt-iota";
 import type { ILoggingComponent } from "@3sixty/logging-models";
@@ -536,7 +544,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 			});
 		}
 
-		return Math.floor(dateValue.getTime() / 1000);
+		return Math.floor(dateValue.getTime() / DurationConstants.MsPerSecond);
 	}
 
 	/**
@@ -561,7 +569,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 		const deleteLockDateTime =
 			lockMetadata.deleteLock.type === "UnlockAt"
-				? new Date(Number(lockMetadata.deleteLock.args) * 1000).toISOString()
+				? new Date(
+						Number(lockMetadata.deleteLock.args) * DurationConstants.MsPerSecond
+					).toISOString()
 				: undefined;
 
 		const transferLockUntilDestroyed =
@@ -569,7 +579,9 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 
 		const transferLockDateTime =
 			lockMetadata.transferLock.type === "UnlockAt"
-				? new Date(Number(lockMetadata.transferLock.args) * 1000).toISOString()
+				? new Date(
+						Number(lockMetadata.transferLock.args) * DurationConstants.MsPerSecond
+					).toISOString()
 				: undefined;
 
 		return {
@@ -596,7 +608,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 					? NotarizationMode.Dynamic
 					: NotarizationMode.Locked,
 			dateCreated: new Date(
-				Number(onChainNotarization.immutableMetadata.createdAt) * 1000
+				Number(onChainNotarization.immutableMetadata.createdAt) * DurationConstants.MsPerSecond
 			).toISOString(),
 			dateModified: new Date(Number(onChainNotarization.lastStateChangeAt)).toISOString(),
 			data: onChainNotarization.state.data.toBytes(),

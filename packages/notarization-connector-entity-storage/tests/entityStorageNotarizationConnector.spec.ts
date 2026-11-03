@@ -1,6 +1,6 @@
 // Copyright 2026 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, Urn } from "@3sixty/core";
+import { Converter, DurationConstants, Urn } from "@3sixty/core";
 import { NotarizationMode } from "@3sixty/notarization-models";
 import { notarizationStore, TEST_ADDRESS_2, TEST_NODE_IDENTITY } from "./setupTestEnv.js";
 import { EntityStorageNotarizationConnector } from "../src/entityStorageNotarizationConnector.js";
@@ -368,7 +368,7 @@ describe("EntityStorageNotarizationConnector", () => {
 
 		test("Should remove dynamic notarization even when transfer lock date is in the future", async () => {
 			const connector = new EntityStorageNotarizationConnector();
-			const futureDate = new Date(Date.now() + 60_000).toISOString();
+			const futureDate = new Date(Date.now() + DurationConstants.MsPerMinute).toISOString();
 
 			const id = await connector.create(TEST_NODE_IDENTITY, {
 				mode: NotarizationMode.Dynamic,
@@ -575,7 +575,7 @@ describe("EntityStorageNotarizationConnector", () => {
 
 		test("Should throw transferFailed when transfer lock date is in the future", async () => {
 			const connector = new EntityStorageNotarizationConnector();
-			const futureDate = new Date(Date.now() + 60_000).toISOString();
+			const futureDate = new Date(Date.now() + DurationConstants.MsPerMinute).toISOString();
 
 			const id = await connector.create(TEST_NODE_IDENTITY, {
 				mode: NotarizationMode.Dynamic,
