@@ -6,7 +6,6 @@ import { NotarizationMetricIds } from "./notarizationMetricIds.js";
 /**
  * Metrics registered by the notarization service.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotarizationMetrics: ITelemetryMetric[] = [
 	{
 		id: NotarizationMetricIds.NotarizationsCreated,

@@ -6,6 +6,5 @@ import type { INotarizationConnector } from "../models/INotarizationConnector.js
 /**
  * Factory for creating notarization connectors.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotarizationConnectorFactory =
 	Factory.createFactory<INotarizationConnector>("notarization-connector");

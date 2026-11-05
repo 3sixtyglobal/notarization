@@ -21,19 +21,20 @@
 		"changelog.md"
 	],
 	"words": [
+		"3sixtyglobal",
 		"abbrev",
 		"autorelease",
 		"bech",
+		"devnet",
 		"Faucet",
 		"hotfixes",
 		"iotaledger",
-		"TWIN",
 		"nameof",
-		"Stiftung",
-		"utxo",
-		"devnet",
+		"notarizations",
 		"Stdlib",
-		"notarizations"
+		"Stiftung",
+		"TWIN",
+		"utxo"
 	],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",

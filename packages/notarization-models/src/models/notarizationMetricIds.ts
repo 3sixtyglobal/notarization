@@ -4,7 +4,6 @@
 /**
  * The metric IDs for the notarization domain.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotarizationMetricIds = {
 	/**
 	 * Number of notarizations created.

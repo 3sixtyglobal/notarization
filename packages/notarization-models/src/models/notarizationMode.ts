@@ -4,7 +4,6 @@
 /**
  * Supported notarization modes.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotarizationMode = {
 	/**
 	 * Dynamic notarization mode.
