@@ -463,7 +463,7 @@ export class IotaNotarizationConnector implements INotarizationConnector {
 	 * @internal
 	 */
 	private extractCreatedObjectId(result: { objectChanges?: unknown }): string {
-		if (!Array.isArray(result.objectChanges)) {
+		if (!Is.array(result.objectChanges)) {
 			throw new GeneralError(IotaNotarizationConnector.CLASS_NAME, "creationFailedOutput");
 		}
 
